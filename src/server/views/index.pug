@@ -1,8 +1,9 @@
 extends layout
 
--var dashboard = JSON.parse(dashboard)
+block head
+  title 
+    =getDashboardTitle(dashboard)
+
 block content
-  h1= title
-  p Welcome to #{title}
-  div 
+  div(id='dashboard' style='display:none') 
       =dashboard
