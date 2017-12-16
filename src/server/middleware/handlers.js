@@ -22,3 +22,15 @@ module.exports.requestRejectionHandler = (handler) =>
       next(err)
     }
   }
+
+module.exports.cors = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+}
+
+module.exports.hal = (req, res, next) => {
+  res.header('Content-Type', 'application/hal+json')
+  next()
+}
+  
