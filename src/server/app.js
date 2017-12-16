@@ -5,6 +5,7 @@ const logger = require('./logging/expressLogger')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const index = require('./routes/index')
+const dashboards = require('./routes/dashboards')
 const handlers = require('./middleware/handlers')
 const app = express()
 
@@ -26,6 +27,7 @@ app.use(logger.createRouteLogger())
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', index)
+app.use('/api/dashboards', dashboards)
 
 // Error Logging - MUST REGISTER BEFORE all routers.
 app.use(logger.createErrorLogger())
