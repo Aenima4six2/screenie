@@ -14,8 +14,6 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 // request handlers
-app.use(handlers.cors)
-app.use(handlers.hal)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
@@ -24,10 +22,10 @@ app.use(cookieParser())
 app.use(logger.createRouteLogger())
 
 // Routing
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', index)
-app.use('/api/dashboards', dashboards)
+app.use('/api/dashboards', handlers.cors, handlers.hal, dashboards)
 
 // Error Logging - MUST REGISTER BEFORE all routers.
 app.use(logger.createErrorLogger())
