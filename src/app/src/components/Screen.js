@@ -1,6 +1,7 @@
 import React from 'react'
 import Iframe from 'react-iframe'
 import PropTypes from 'prop-types'
+import { getServerAddress } from '../utilities'
 
 export default class Screen extends React.Component {
   state = {}
@@ -43,15 +44,15 @@ export default class Screen extends React.Component {
     this.setState({ ...currentPage, schedule })
   }
 
-  filterActivePages = (pages) => pages.filter(page => page.isActive)
+  filterActivePages = (pages) => pages
+    .filter(page => page.isActive)
+    .sort((a, b) => a.ordinal - b.ordinal)
 
   getUrl = () => {
     let url = this.state.url
-    if(this.state.useProxy){
-      const origin = window.location.origin
-      const baseAddress = origin.endsWith('/') ? origin : `${origin}/`
-      const proxied = `${baseAddress}proxy?url=${url}`
-      return proxied
+    if (this.state.forceProxy) {
+      const uri = `${getServerAddress()}/proxy?url=${url}`
+      return uri
     }
 
     return url

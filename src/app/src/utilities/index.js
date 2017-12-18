@@ -16,3 +16,12 @@ export function titleCase(str) {
     return match.charAt(0).toUpperCase() + match.substr(1)
   })
 }
+
+export function getServerAddress() {
+  const origin = window.location.origin
+  const baseAddress = (origin.endsWith('/') || origin.endsWith('\\'))
+    ? origin.substring(0, origin.length - 1)
+    : origin
+    
+  return baseAddress
+}
