@@ -5,12 +5,19 @@ import RaisedButton from 'material-ui/RaisedButton'
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 import PropTypes from 'prop-types'
 import { titleCase } from '../utilities'
+import FontIcon from 'material-ui/FontIcon'
+import '../../node_modules/font-awesome/css/font-awesome.css'
 
 const styles = {
   radioButton: {
     marginTop: 16,
   }
 }
+
+const iconStyles = {
+  marginRight: 24,
+}
+
 
 export default class ModalDashboardSelector extends React.Component {
   state = {
@@ -46,6 +53,11 @@ export default class ModalDashboardSelector extends React.Component {
           value={dashboard}
           label={titleCase(dashboard.name)}
           style={styles.radioButton}
+          checkedIcon={
+            <FontIcon
+              className="fa fa-tachometer"
+              style={iconStyles}
+            />}
         />
       )
     }
