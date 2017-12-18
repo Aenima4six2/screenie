@@ -10,3 +10,12 @@ services:
             timeout: 10s
             retries: 3
         restart: on-failure
+    screenie-server:
+        ports:
+            - "80:80"
+        build: .
+        restart: on-failure
+        depends_on:
+            - screenie-mongo
+        environment:
+            - MONGODB_CONNECTION-URI=mongodb://screenie-mongo:27017/screenie
