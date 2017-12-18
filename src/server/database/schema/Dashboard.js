@@ -6,7 +6,7 @@ const Layout = require('./Layout').schema
 // Setting Schema
 const name = require('path').basename(__filename, '.js')
 const schema = new Schema({
-  name: { type: String, unique: true, lowercase: true, trim: true, required: '{PATH} is required!' },
+  name: { type: String, unique: true, trim: true, required: '{PATH} is required!' },
   pages: { type: [Page], required: '{PATH} is required!' },
   layout: { type: Layout, required: '{PATH} is required!' },
   isActive: { type: Boolean, default: true, required: '{PATH} is required!' },

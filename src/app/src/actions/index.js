@@ -1,4 +1,5 @@
 import 'whatwg-fetch'
+import { getServerAddress } from '../utilities'
 
 export const addPane = () => {
   return {
@@ -13,9 +14,8 @@ export const removePane = () => {
 }
 
 export const loadDashboards = () => async (dispatch) => {
-  const origin = window.location.origin
-  const baseAddress = origin.endsWith('/') ? origin : `${origin}/`
-  const response = await fetch(`${baseAddress}api/dashboards`)
+  const uri = `${getServerAddress()}/api/dashboards`
+  const response = await fetch(uri)
   const available = await response.json()
   dispatch({
     type: 'LOAD_AVAILABLE',
@@ -28,4 +28,8 @@ export const setCurrent = (current) => {
     type: 'SET_CURRENT',
     current
   }
+}
+
+export const addDashboard = async (values, dispatch) => {
+
 }

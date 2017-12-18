@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Build UI
 (cd ./app && yarn && yarn run build:server)
