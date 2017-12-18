@@ -13,7 +13,9 @@ export const removePane = () => {
 }
 
 export const loadDashboards = () => async (dispatch) => {
-  const response = await fetch('http://localhost:3000/api/dashboards')
+  const origin = window.location.origin
+  const baseAddress = origin.endsWith('/') ? origin : `${origin}/`
+  const response = await fetch(`${baseAddress}api/dashboards`)
   const available = await response.json()
   dispatch({
     type: 'LOAD_AVAILABLE',
