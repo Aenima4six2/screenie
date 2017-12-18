@@ -45,7 +45,7 @@ export default class DashboardLayout extends React.Component {
     return (
       <div className="dashboard">
         <AppBar
-          title={`Screenie - ${titleCase(this.props.current.name)}`}
+          title={titleCase(this.props.current.name)}
           iconClassNameRight="muidocs-icon-navigation-expand-more"
           onLeftIconButtonClick={this.onToggleDrawer}
         />
