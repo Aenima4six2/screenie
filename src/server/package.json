@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start:dev": "export NODE_ENV=development && export PORT=3001 && node ./bin/www",
+    "start:release": "export NODE_ENV=production && export PORT=80 && node ./bin/www",
     "lint-fix": "eslint --fix . --ext .js"
   },
   "dependencies": {
@@ -20,7 +21,6 @@
     "morgan": "~1.9.0",
     "pug": "2.0.0-beta11",
     "request": "^2.83.0",
-    "serve-favicon": "~2.4.5",
     "socket.io": "^2.0.4",
     "winston": "^2.4.0"
   }

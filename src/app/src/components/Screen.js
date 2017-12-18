@@ -45,10 +45,22 @@ export default class Screen extends React.Component {
 
   filterActivePages = (pages) => pages.filter(page => page.isActive)
 
+  getUrl = () => {
+    let url = this.state.url
+    if(this.state.useProxy){
+      const origin = window.location.origin
+      const baseAddress = origin.endsWith('/') ? origin : `${origin}/`
+      const proxied = `${baseAddress}proxy?url=${url}`
+      return proxied
+    }
+
+    return url
+  }
+
   render() {
     return (
       <Iframe
-        url={this.state.url}
+        url={this.getUrl()}
         width="100%"
         height="100%"
         id={this.props.current._id}
