@@ -5,7 +5,13 @@ import MenuItem from 'material-ui/MenuItem'
 import Screen from './Screen'
 import PropTypes from 'prop-types'
 import { titleCase } from '../utilities'
+import FontIcon from 'material-ui/FontIcon'
 import './DashboardLayout.css'
+import '../../node_modules/font-awesome/css/font-awesome.css'
+
+const iconStyles = {
+  marginRight: 24,
+}
 
 export default class DashboardLayout extends React.Component {
   state = {
@@ -23,7 +29,13 @@ export default class DashboardLayout extends React.Component {
 
   createMenuItems = () => {
     return this.props.available.map((dashboard, idx) =>
-      <MenuItem key={idx} onClick={() => this.handleSubmit(dashboard)}>
+      <MenuItem key={idx}
+        leftIcon={
+          <FontIcon
+            className="fa fa-tachometer"
+            style={iconStyles}
+          />}
+        onClick={() => this.handleSubmit(dashboard)}>
         {titleCase(dashboard.name)}
       </MenuItem>
     )
@@ -39,10 +51,11 @@ export default class DashboardLayout extends React.Component {
         />
         <Drawer
           docked={false}
-          width={200}
+          width={300}
           open={this.state.open}
           onRequestChange={(open) => this.setState({ open })}
         >
+          <AppBar showMenuIconButton={false} title="Dashboards" />
           {this.createMenuItems()}
         </Drawer>
         <Screen {...this.props} />
