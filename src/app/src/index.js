@@ -1,8 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import App from './components/App'
+import Store from './store'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import theme from './theme'
+import 'typeface-roboto'
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+render(
+  <Provider store={Store}>
+    <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
+      <App />
+    </MuiThemeProvider>
+  </Provider>,
+  document.getElementById('root')
+)
