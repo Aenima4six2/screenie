@@ -14,9 +14,9 @@ router.get('/:dashboardName', handleRejections(async (req, res) => {
   const dashboardName = req.params.dashboardName
   if (!dashboardName) return req.statusCode(statusCode.NOT_FOUND)
 
-  const models = await Dashboard.find({ name: dashboardName.toLowerCase() })
+  const models = await Dashboard.find({ name: dashboardName })
   if (!(models && models.length)) {
-    return res.statusCode(statusCode.NOT_FOUND)
+    return res.sendStatus(statusCode.NOT_FOUND)
   }
 
   res.render('index', {
@@ -33,7 +33,7 @@ router.get('/:id', handleRejections(async (req, res) => {
   const id = req.params.id
   const models = await Dashboard.find({ _id: id })
   if (!(models && models.length)) {
-    return res.statusCode(statusCode.NOT_FOUND)
+    return res.sendStatus(statusCode.NOT_FOUND)
   }
 
   res.render('index', {
