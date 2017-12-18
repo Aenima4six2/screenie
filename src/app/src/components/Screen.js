@@ -12,7 +12,7 @@ export default class Screen extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.current !== nextProps.current) {
+    if (this.props.current !== nextProps.current) {
       if (this.state.schedule) {
         clearInterval(this.state.schedule)
       }
