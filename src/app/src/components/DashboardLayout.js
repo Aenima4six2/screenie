@@ -5,17 +5,16 @@ import MenuItem from 'material-ui/MenuItem'
 import Screen from './Screen'
 import PropTypes from 'prop-types'
 import { titleCase } from '../utilities'
+import Fullscreen from "react-full-screen"
 import FontIcon from 'material-ui/FontIcon'
+import IconButton from 'material-ui/IconButton'
 import './DashboardLayout.css'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
-const iconStyles = {
-  marginRight: 24,
-}
-
 export default class DashboardLayout extends React.Component {
   state = {
-    open: false
+    open: false,
+    isFull: false
   }
 
   onToggleDrawer = () => {
@@ -33,7 +32,7 @@ export default class DashboardLayout extends React.Component {
         leftIcon={
           <FontIcon
             className="fa fa-tachometer"
-            style={iconStyles}
+            style={{ marginRight: 24 }}
           />}
         onClick={() => this.handleSubmit(dashboard)}>
         {titleCase(dashboard.name)}
@@ -41,13 +40,34 @@ export default class DashboardLayout extends React.Component {
     )
   }
 
+  goFull = () => {
+    this.setState({ isFull: true });
+  }
+
   render() {
+    const screenWrapperClass = this.state.isFull
+      ? "fullscreen-dashboard"
+      : "dashboard"
+      
     return (
-      <div className="dashboard">
+      <div>
         <AppBar
           title={titleCase(this.props.current.name)}
           iconClassNameRight="muidocs-icon-navigation-expand-more"
           onLeftIconButtonClick={this.onToggleDrawer}
+          iconElementRight={
+            <IconButton tooltip="Fullscreen">
+              <FontIcon
+                className="fa fa-desktop"
+                onClick={this.goFull}
+                style={{
+                  marginRight: '1rem',
+                  marginTop: '.5rem',
+                  color: 'black',
+                  cursor: 'pointer'
+                }}
+              />
+            </IconButton>}
         />
         <Drawer
           docked={false}
@@ -58,7 +78,15 @@ export default class DashboardLayout extends React.Component {
           <AppBar showMenuIconButton={false} title="Dashboards" />
           {this.createMenuItems()}
         </Drawer>
-        <Screen {...this.props} />
+        <Fullscreen
+          enabled={this.state.isFull}
+          onChange={isFull => {
+            this.setState({ isFull })
+          }}>
+          <div className={screenWrapperClass}>
+            <Screen {...this.props} />
+          </div>
+        </Fullscreen>
       </div>
     )
   }
