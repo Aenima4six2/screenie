@@ -1,3 +1,7 @@
 .dashboard{
   height: 90vh;
 }
+
+.fullscreen-dashboard{
+  height: 100vh;
+}
