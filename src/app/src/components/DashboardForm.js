@@ -51,19 +51,13 @@ class DashboardForm extends React.Component {
         />
         <br />
         <ol>
-          {this.state.pages.map(page =>
+          {this.state.pages.map((page, idx) =>
             <li>
-              <PageEditor
-                id={page.id}
-                name={page.name}
-                url={page.url}
-                forceProxy={page.forceProxy}
-                durationMs={page.durationMs}
-                ordinal={page.ordinal}
-              />
-              {page.id > 1 && <FlatButton
-                label="Remove"
-                onClick={() => this.handleRemovePageClicked(page)} />}
+              <PageEditor key={idx} id={page.id} page={page} />
+              {this.state.pages.length > 1 &&
+                <FlatButton
+                  label="Remove"
+                  onClick={() => this.handleRemovePageClicked(page)} />}
             </li>
           )}
         </ol>
