@@ -8,40 +8,39 @@ import '../../node_modules/font-awesome/css/font-awesome.css'
 class DashboardForm extends React.Component {
   static propTypes = {
     id: PropTypes.number.isRequired,
-    name: PropTypes.string,
-    url: PropTypes.string,
-    forceProxy: PropTypes.bool,
-    durationMs: PropTypes.number,
-    ordinal: PropTypes.number,
-    onPageChanged: PropTypes.func.isRequired
+    page: PropTypes.object.isRequired
   }
 
-  state = {
-    name: this.props.name,
-    url: this.props.url,
-    forceProxy: this.props.forceProxy,
-    durationMs: this.props.durationMs,
-    ordinal: this.props.ordinal
-  }
+  state = { page: this.props.page }
 
   handleNameChange = (event) => {
-    this.setState({ name: event.target.value })
+    const page = this.state.page
+    page.name = event.target.value
+    this.setState({ page })
   }
 
   handleUrlChange = (event) => {
-    this.setState({ url: event.target.value })
+    const page = this.state.page
+    page.url = event.target.value
+    this.setState({ page })
   }
 
-  handleForceProxyChange = (event) => {
-    this.setState({ forceProxy: event.target.value })
+  handleForceProxyToggle = (event, isInputChecked) => {
+    const page = this.state.page
+    page.forceProxy = isInputChecked
+    this.setState({ page })
   }
 
   handleDurationMsChange = (event) => {
-    this.setState({ durationMs: event.target.value })
+    const page = this.state.page
+    page.durationMs = event.target.value
+    this.setState({ page })
   }
 
   handleOrdinalChange = (event) => {
-    this.setState({ ordinal: event.target.value })
+    const page = this.state.page
+    page.ordinal = event.target.value
+    this.setState({ page })
   }
 
   render() {
@@ -50,35 +49,36 @@ class DashboardForm extends React.Component {
         <TextField
           floatingLabelText="Page Name"
           hintText="Google"
-          value={this.state.name}
+          value={this.state.page.name}
           onChange={this.handleNameChange}
         />
         <br />
         <TextField
           floatingLabelText="Page Url"
           hintText="https://www.google.com"
-          value={this.state.url}
+          value={this.state.page.url}
           onChange={this.handleUrlChange}
         />
         <br />
         <TextField
           floatingLabelText="Page Duration"
           hintText="60"
-          value={this.state.durationMs}
+          value={this.state.page.durationMs}
           onChange={this.handleDurationMsChange}
         />
         <br />
         <TextField
           floatingLabelText="Page Display Order"
           hintText="1"
-          value={this.state.ordinal}
+          value={this.state.page.ordinal}
           onChange={this.handleOrdinalChange}
         />
         <p />
         <Toggle
           label="Force Proxy"
-          disabled={this.state.handleForceProxyChange}
+          disabled={!this.state.page.forceProxy}
           labelPosition="right"
+          onToggle={this.handleForceProxyToggle}
           style={{ marginBottom: 16 }}
         />
       </div>

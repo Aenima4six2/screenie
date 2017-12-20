@@ -35,7 +35,7 @@ export default class ModalDashboardSelector extends React.Component {
     this.setState({ open: false, addNewOpen: true })
   }
 
-  handleAddNewClosed = () => {
+  handleModalDashboardFormClosed = () => {
     this.setState({ open: true, addNewOpen: false })
   }
 
@@ -79,7 +79,7 @@ export default class ModalDashboardSelector extends React.Component {
 
         <ModalDashboardForm
           open={this.state.addNewOpen}
-          onClosed={this.handleAddNewClosed}
+          onClosed={this.handleModalDashboardFormClosed}
         />
       </div>
     )
