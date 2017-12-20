@@ -1,91 +1,81 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
 import TextField from 'material-ui/TextField'
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
-import Checkbox from 'material-ui/Checkbox'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
-import asyncValidate from './asyncValidate'
+import Toggle from 'material-ui/Toggle'
+import RaisedButton from 'material-ui/RaisedButton'
+import PropTypes from 'prop-types'
+import PageEditor from './PageEditor'
+import FlatButton from 'material-ui/FlatButton'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import ContentAdd from 'material-ui/svg-icons/content/add'
+import '../../node_modules/font-awesome/css/font-awesome.css'
 
-const validate = values => {
-  const errors = {}
-  const requiredFields = [ 'firstName', 'lastName', 'email', 'favoriteColor', 'notes' ]
-  requiredFields.forEach(field => {
-    if (!values[ field ]) {
-      errors[ field ] = 'Required'
-    }
-  })
-  if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
+class DashboardForm extends React.Component {
+  static defaultProps = {
+    name: '',
+    pages: [{ id: 1 }]
   }
-  return errors
+
+  static propTypes = {
+    name: PropTypes.string,
+    pages: PropTypes.arrayOf(PropTypes.object),
+    onDashboardAdded: PropTypes.func.isRequired
+  }
+
+  state = {
+    name: this.props.name,
+    pages: this.props.pages
+  }
+
+  handleNameChange = (event) => {
+    this.setState({ name: event.target.value })
+  }
+
+  handleAddPageClicked = () => {
+    const id = this.state.pages.length + 1
+    this.setState({ pages: [...this.state.pages, { id }] })
+  }
+
+  handleRemovePageClicked = (page) => {
+    const pages = this.state.pages.filter(p => p.id !== page.id)
+    this.setState({ pages })
+  }
+
+  render() {
+    return (
+      <form style={{ marginLeft: '2rem' }}>
+        <TextField
+          floatingLabelText="Dashboard Name"
+          hintText="Sample Dashboard"
+          value={this.state.name}
+          onChange={this.handleNameChange}
+        />
+        <br />
+        <ol>
+          {this.state.pages.map(page =>
+            <li>
+              <PageEditor
+                id={page.id}
+                name={page.name}
+                url={page.url}
+                forceProxy={page.forceProxy}
+                durationMs={page.durationMs}
+                ordinal={page.ordinal}
+              />
+              {page.id > 1 && <FlatButton
+                label="Remove"
+                onClick={() => this.handleRemovePageClicked(page)} />}
+            </li>
+          )}
+        </ol>
+        <FloatingActionButton
+          onClick={this.handleAddPageClicked}
+          mini={true}
+          style={{ marginRight: 20, float: 'right' }}>
+          <ContentAdd />
+        </FloatingActionButton>
+      </form>
+    )
+  }
 }
 
-const renderTextField = props => (
-  <TextField hintText={props.label}
-    floatingLabelText={props.label}
-    errorText={props.touched && props.error}
-    {...props}
-  />
-)
-
-const renderCheckbox = props => (
-  <Checkbox label={props.label}
-    checked={props.value ? true : false}
-    onCheck={props.onChange}/>
-)
-
-const renderSelectField = props => (
-  <SelectField
-    floatingLabelText={props.label}
-    errorText={props.touched && props.error}
-    {...props}
-    onChange={(event, index, value) => props.onChange(value)}>
-  </SelectField>
-)
-
-const MaterialUiForm = props => {
-  const { handleSubmit, pristine, reset, submitting } = props
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <Field name="firstName" component={renderTextField} label="First Name"/>
-      </div>
-      <div>
-        <Field name="lastName" component={renderTextField} label="Last Name"/>
-      </div>
-      <div>
-        <Field name="email" component={renderTextField} label="Email"/>
-      </div>
-      <div>
-        <Field name="sex" component={RadioButtonGroup}>
-          <RadioButton value="male" label="male"/>
-          <RadioButton value="female" label="female"/>
-        </Field>
-      </div>
-      <div>
-        <Field name="favoriteColor" component={renderSelectField} label="Favorite Color">
-          <MenuItem value={'ff0000'} primaryText="Red"/>
-          <MenuItem value={'00ff00'} primaryText="Green"/>
-          <MenuItem value={'0000ff'} primaryText="Blue"/>
-        </Field>
-      </div>
-      <div>
-        <Field name="employed" component={renderCheckbox} label="Employed"/>
-      </div>
-      <div>
-        <Field name="notes" component={renderTextField} label="Notes" multiLine={true} rows={2}/>
-      </div>
-      <div>
-        <button type="submit" disabled={pristine || submitting}>Submit</button>
-        <button type="button" disabled={pristine || submitting} onClick={reset}>Clear Values</button>
-      </div>
-    </form>
-  )
-}
-
-export default reduxForm({
-  form: 'MaterialUiForm',  // a unique identifier for this form
-  validate,
-  asyncValidate
-})(MaterialUiForm)
+export default DashboardForm

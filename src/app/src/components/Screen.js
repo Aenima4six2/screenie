@@ -43,7 +43,7 @@ export default class Screen extends React.Component {
       const nextPageIndex = currentPageIndex < lastPageIndex ? currentPageIndex + 1 : 0
       const nextPage = activePages[nextPageIndex]
       this.schedulePages(nextPage)
-    }, currentPage.interval * 1000)
+    }, currentPage.durationMs * 1000)
 
     this.setState({ ...currentPage, schedule })
   }

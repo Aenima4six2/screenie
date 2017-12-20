@@ -4,11 +4,18 @@ import './Loading.css'
 import 'typeface-roboto'
 
 export default class Connecting extends Component {
-    constructor() {
-        super()
-        this.state = {
-            dots: 3
-        }
+    static defaultProps = {
+        message: 'Loading',
+        showProgress: true
+    }
+
+    static propTypes = {
+        message: PropTypes.string,
+        showProgress: PropTypes.bool
+    }
+
+    state = {
+        dots: 3
     }
 
     componentDidMount() {
@@ -38,14 +45,4 @@ export default class Connecting extends Component {
             </div>
         )
     }
-}
-
-Connecting.propTypes = {
-    message: PropTypes.string,
-    showProgress: PropTypes.bool
-}
-
-Connecting.defaultProps = {
-    message: 'Loading',
-    showProgress: true
 }
