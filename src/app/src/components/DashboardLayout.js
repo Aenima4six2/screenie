@@ -8,10 +8,20 @@ import { titleCase } from '../utilities'
 import Fullscreen from "react-full-screen"
 import FontIcon from 'material-ui/FontIcon'
 import IconButton from 'material-ui/IconButton'
+import { withRouter } from 'react-router-dom'
 import './DashboardLayout.css'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
-export default class DashboardLayout extends React.Component {
+class DashboardLayout extends React.Component {
+  static propTypes = {
+    onCurrentSelected: PropTypes.func.isRequired,
+    current: PropTypes.object,
+    available: PropTypes.arrayOf(PropTypes.object).isRequired,
+    match: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
+
   state = {
     open: false,
     isFull: false
@@ -22,6 +32,7 @@ export default class DashboardLayout extends React.Component {
   }
 
   handleSubmit = (dashboard) => {
+    this.props.history.push(`/${dashboard.name}`)
     this.props.onCurrentSelected(dashboard)
     this.setState({ open: false })
   }
@@ -48,12 +59,11 @@ export default class DashboardLayout extends React.Component {
     const screenWrapperClass = this.state.isFull
       ? "fullscreen-dashboard"
       : "dashboard"
-      
+
     return (
       <div>
         <AppBar
           title={titleCase(this.props.current.name)}
-          iconClassNameRight="muidocs-icon-navigation-expand-more"
           onLeftIconButtonClick={this.onToggleDrawer}
           iconElementRight={
             <IconButton tooltip="Fullscreen">
@@ -92,8 +102,4 @@ export default class DashboardLayout extends React.Component {
   }
 }
 
-DashboardLayout.props = {
-  onCurrentSelected: PropTypes.func.isRequired,
-  current: PropTypes.object,
-  available: PropTypes.arrayOf(PropTypes.object).isRequired
-}
+export default withRouter(DashboardLayout)

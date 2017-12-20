@@ -3,7 +3,6 @@ const path = require('path')
 const logger = require('./logging/expressLogger')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const index = require('./routes/index')
 const proxy = require('./routes/proxy')
 const dashboards = require('./routes/dashboards')
 const handlers = require('./middleware/handlers')
@@ -22,10 +21,12 @@ app.use(cookieParser())
 app.use(logger.createRouteLogger())
 
 // Routing
-app.use(express.static(path.join(__dirname, 'public')))
 app.use('/proxy', proxy)
-app.use('/api/dashboards', handlers.cors, handlers.hal, dashboards)
-app.use('/', index)
+app.use('/api/dashboards', dashboards)
+app.use(express.static(path.join(__dirname, 'public')))
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
 
 // Error Logging - MUST REGISTER BEFORE all routers.
 app.use(logger.createErrorLogger())

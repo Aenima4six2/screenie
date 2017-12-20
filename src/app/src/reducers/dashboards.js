@@ -1,7 +1,6 @@
 const maxPanes = 4
 const minPanes = 1
 const defaultState = {
-  loaded: false,
   available: []
 }
 
@@ -10,7 +9,6 @@ const available = (state = defaultState, action) => {
     case 'LOAD_AVAILABLE': {
       return {
         ...state,
-        loaded: true,
         available: [...action.available]
       }
     }

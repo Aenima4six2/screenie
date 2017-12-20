@@ -13,7 +13,7 @@ export const removePane = () => {
   }
 }
 
-export const loadDashboards = () => async (dispatch) => {
+export const loadDashboardsAndSetCurrent = (nameOrId) => async (dispatch) => {
   const uri = `${getServerAddress()}/api/dashboards`
   const response = await fetch(uri)
   const available = await response.json()
@@ -21,6 +21,11 @@ export const loadDashboards = () => async (dispatch) => {
     type: 'LOAD_AVAILABLE',
     available
   })
+
+  if (nameOrId) {
+    const current = available.find(x => x._id === nameOrId || x.name === nameOrId)
+    if (current) dispatch(setCurrent(current))
+  }
 }
 
 export const setCurrent = (current) => {

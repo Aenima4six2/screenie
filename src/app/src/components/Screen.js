@@ -4,6 +4,10 @@ import PropTypes from 'prop-types'
 import { getServerAddress } from '../utilities'
 
 export default class Screen extends React.Component {
+  static propTypes = {
+    current: PropTypes.object.isRequired
+  }
+
   state = {}
 
   componentWillMount() {
@@ -70,8 +74,4 @@ export default class Screen extends React.Component {
         allowFullScreen />
     )
   }
-}
-
-Screen.props = {
-  current: PropTypes.object.isRequired
 }

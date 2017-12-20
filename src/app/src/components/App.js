@@ -5,11 +5,21 @@ import Loading from './Loading'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router'
 
 class App extends Component {
+  static propTypes = {
+    current: PropTypes.object,
+    available: PropTypes.arrayOf(PropTypes.object).isRequired,
+    match: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
+
   componentDidMount() {
-    if (!this.props.loaded) {
-      this.props.dispatch(actions.loadDashboards())
+    if (!this.props.available.length) {
+      const nameOrId = this.props.match.params.nameOrId
+      this.props.dispatch(actions.loadDashboardsAndSetCurrent(nameOrId))
     }
   }
 
@@ -18,9 +28,8 @@ class App extends Component {
   }
 
   render() {
-    if (this.props.loaded) {
-      var showDashboard = !!this.props.current
-      if (showDashboard) {
+    if (this.props.available.length) {
+      if (this.props.current) {
         return (
           <DashboardLayout
             onCurrentSelected={this.setCurrent}
@@ -37,22 +46,15 @@ class App extends Component {
       )
     }
 
-    return <Loading/>
+    return <Loading />
   }
-}
-
-App.props = {
-  loaded: PropTypes.bool.isRequired,
-  current: PropTypes.object,
-  available: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 function mapStateToProps(state) {
   return {
-    loaded: state.dashboards.loaded,
     available: state.dashboards.available,
     current: state.dashboards.current
   }
 }
 
-export default connect(mapStateToProps)(App)
+export default withRouter(connect(mapStateToProps)(App))
