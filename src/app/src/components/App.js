@@ -42,7 +42,9 @@ class App extends Component {
         <ModalDashboardSelector
           onCurrentSelected={this.setCurrent}
           current={this.props.current}
-          available={this.props.available} />
+          available={this.props.available}
+          {...this.props}
+        />
       )
     }
 

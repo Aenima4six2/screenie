@@ -1,46 +1,77 @@
 import React from 'react'
 import TextField from 'material-ui/TextField'
 import Toggle from 'material-ui/Toggle'
-import RaisedButton from 'material-ui/RaisedButton'
 import PropTypes from 'prop-types'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
-class DashboardForm extends React.Component {
-  static propTypes = {
-    id: PropTypes.number.isRequired,
-    page: PropTypes.object.isRequired
+class PageEditor extends React.Component {
+  static defaultProps = {
+    name: '',
+    url: '',
+    forceProxy: false,
+    durationMs: '',
+    ordinal: ''
   }
 
-  state = { page: this.props.page }
+  static propTypes = {
+    name: PropTypes.string,
+    url: PropTypes.string,
+    forceProxy: PropTypes.bool.isRequired,
+    durationMs: PropTypes.string,
+    ordinal: PropTypes.string,
+    onPageChanged: PropTypes.func
+  }
+
+  state = {
+    name: this.props.name,
+    url: this.props.url,
+    forceProxy: !!this.props.forceProxy,
+    durationMs: this.props.durationMs,
+    ordinal: this.props.ordinal
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      name: nextProps.name,
+      url: nextProps.url,
+      forceProxy: nextProps.forceProxy,
+      durationMs: nextProps.durationMs,
+      ordinal: nextProps.ordinal
+    })
+  }
+
+  getPage = () => ({ ...this.state })
 
   handleNameChange = (event) => {
-    const page = this.state.page
-    page.name = event.target.value
-    this.setState({ page })
+    const name = event.target.value
+    this.setState({ name }, this.handlePageChanged)
   }
 
   handleUrlChange = (event) => {
-    const page = this.state.page
-    page.url = event.target.value
-    this.setState({ page })
+    const url = event.target.value
+    this.setState({ url }, this.handlePageChanged)
   }
 
   handleForceProxyToggle = (event, isInputChecked) => {
-    const page = this.state.page
-    page.forceProxy = isInputChecked
-    this.setState({ page })
+    const forceProxy = isInputChecked
+    this.setState({ forceProxy }, this.handlePageChanged)
   }
 
   handleDurationMsChange = (event) => {
-    const page = this.state.page
-    page.durationMs = event.target.value
-    this.setState({ page })
+    const durationMs = event.target.value
+    this.setState({ durationMs }, this.handlePageChanged)
   }
 
   handleOrdinalChange = (event) => {
-    const page = this.state.page
-    page.ordinal = event.target.value
-    this.setState({ page })
+    const ordinal = event.target.value
+    this.setState({ ordinal }, this.handlePageChanged)
+  }
+
+  handlePageChanged = () => {
+    if (this.props.onPageChanged) {
+      const page = this.getPage()
+      this.props.onPageChanged(page)
+    }
   }
 
   render() {
@@ -49,34 +80,34 @@ class DashboardForm extends React.Component {
         <TextField
           floatingLabelText="Page Name"
           hintText="Google"
-          value={this.state.page.name}
+          value={this.state.name}
           onChange={this.handleNameChange}
         />
         <br />
         <TextField
           floatingLabelText="Page Url"
           hintText="https://www.google.com"
-          value={this.state.page.url}
+          value={this.state.url}
           onChange={this.handleUrlChange}
         />
         <br />
         <TextField
-          floatingLabelText="Page Duration"
+          floatingLabelText="Page Duration (in seconds)"
           hintText="60"
-          value={this.state.page.durationMs}
+          value={this.state.durationMs}
           onChange={this.handleDurationMsChange}
         />
         <br />
         <TextField
           floatingLabelText="Page Display Order"
           hintText="1"
-          value={this.state.page.ordinal}
+          value={this.state.ordinal}
           onChange={this.handleOrdinalChange}
         />
         <p />
         <Toggle
           label="Force Proxy"
-          disabled={!this.state.page.forceProxy}
+          toggled={this.state.forceProxy}
           labelPosition="right"
           onToggle={this.handleForceProxyToggle}
           style={{ marginBottom: 16 }}
@@ -86,4 +117,4 @@ class DashboardForm extends React.Component {
   }
 }
 
-export default DashboardForm
+export default PageEditor

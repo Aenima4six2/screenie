@@ -1,24 +1,26 @@
 import React from 'react'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 import PropTypes from 'prop-types'
-import { titleCase } from '../utilities'
-import FontIcon from 'material-ui/FontIcon'
-import DashboardForm from './DashboardForm'
+import DashboardEditor from './DashboardEditor'
+import { connect } from 'react-redux'
+import * as actions from '../actions'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
-export default class ModalDashboardForm extends React.Component {
+class ModalDashboardForm extends React.Component {
   static propTypes = {
     onClosed: PropTypes.func,
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
+    dispatch: PropTypes.func.isRequired
   }
 
-  state = { canSave: false }
-
   handleSave = () => {
-    this.setState({ open: false })
-    if (this.props.onClosed) this.props.onClosed()
+    const dashboard = this.editor.getDashboard()
+    this.props.dispatch(actions.addNewDashboard(dashboard))
+
+    this.setState({ open: false }, () => {
+      if (this.props.onClosed) this.props.onClosed()
+    })
   }
 
   handleCancel = () => {
@@ -27,34 +29,41 @@ export default class ModalDashboardForm extends React.Component {
   }
 
   handleAddNewClicked = () => {
-    this.setState({ open: false, open: true })
+    this.setState({ open: false })
   }
 
   render() {
     return (
-      <Dialog
-        title="Add New Dashboard"
-        actions={[
-          <FlatButton
-            label="Save"
-            primary={true}
-            keyboardFocused={true}
-            disabled={!this.state.canSave}
-            onClick={this.handleSave}
-          />,
-          <FlatButton
-            label="Cancel"
-            primary={false}
-            keyboardFocused={false}
-            onClick={this.handleCancel}
-          />
-        ]}
-        open={this.props.open}
-        modal={true}
-        autoScrollBodyContent={true}>
+      <form>
+        <Dialog
+          title="Add New Dashboard"
+          actions={[
+            <FlatButton
+              label="Save"
+              primary={true}
+              keyboardFocused={true}
+              disabled={!!this.editor}
+              onClick={this.handleSave}
+            />,
+            <FlatButton
+              label="Cancel"
+              primary={false}
+              keyboardFocused={false}
+              onClick={this.handleCancel}
+            />
+          ]}
+          open={this.props.open}
+          modal={true}
+          autoScrollBodyContent={true}>
 
-        <DashboardForm />
-      </Dialog>
+          <DashboardEditor ref={node => {
+            this.editor = node
+          }} />
+        </Dialog>
+      </form>
     )
   }
 }
+
+
+export default connect()(ModalDashboardForm)

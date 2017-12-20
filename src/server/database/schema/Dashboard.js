@@ -8,7 +8,7 @@ const name = require('path').basename(__filename, '.js')
 const schema = new Schema({
   name: { type: String, unique: true, trim: true, required: '{PATH} is required!' },
   pages: { type: [Page], required: '{PATH} is required!' },
-  layout: { type: Layout, required: '{PATH} is required!' },
+  layout: { type: Layout },
   isActive: { type: Boolean, default: true, required: '{PATH} is required!' },
 }, { timestamps: true, collection: name })
 
