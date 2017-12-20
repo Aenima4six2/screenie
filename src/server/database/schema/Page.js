@@ -7,7 +7,7 @@ const schema = new Schema({
   name: { type: String, trim: true, required: '{PATH} is required!' },
   url: { type: String, required: '{PATH} is required!' },
   forceProxy: { type: Boolean, default: false },
-  interval: { type: Number, default: 60, required: '{PATH} is required!' },
+  durationMs: { type: Number, default: 60, required: '{PATH} is required!' },
   ordinal: { type: Number, required: '{PATH} is required!' },
   isActive: { type: Boolean, default: true, required: '{PATH} is required!' },
 }, { _id: false, collection: name })
