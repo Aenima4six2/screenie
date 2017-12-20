@@ -8,7 +8,10 @@ import { titleCase } from '../utilities'
 import Fullscreen from "react-full-screen"
 import FontIcon from 'material-ui/FontIcon'
 import IconButton from 'material-ui/IconButton'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import ContentAdd from 'material-ui/svg-icons/content/add'
 import { withRouter } from 'react-router-dom'
+import ModalDashboardForm from './ModalDashboardForm'
 import './DashboardLayout.css'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
@@ -23,33 +26,48 @@ class DashboardLayout extends React.Component {
   }
 
   state = {
-    open: false,
+    drawerOpen: false,
+    addNewDashboardOpen: false,
     isFull: false
   }
 
   onToggleDrawer = () => {
-    this.setState({ open: true })
+    this.setState({ drawerOpen: true })
   }
 
   handleSubmit = (dashboard) => {
     this.props.history.push(`/${dashboard.name}`)
     this.props.onCurrentSelected(dashboard)
-    this.setState({ open: false })
+    this.setState({ drawerOpen: false })
   }
 
-  createMenuItems = () => {
-    return this.props.available.map((dashboard, idx) =>
-      <MenuItem key={idx}
-        leftIcon={
-          <FontIcon
-            className="fa fa-tachometer"
-            style={{ marginRight: 24 }}
-          />}
-        onClick={() => this.handleSubmit(dashboard)}>
-        {titleCase(dashboard.name)}
-      </MenuItem>
-    )
+  handleAddDashboardClicked = () => {
+    this.setState({ drawerOpen: false, addNewDashboardOpen: true })
   }
+
+  handleModalDashboardFormClosed = () => {
+    this.setState({ drawerOpen: true, addNewDashboardOpen: false })
+  }
+
+  createDrawerItems = () =>
+    <div>
+      {this.props.available.map((dashboard, idx) =>
+        <MenuItem key={idx}
+          leftIcon={
+            <FontIcon
+              className="fa fa-tachometer"
+              style={{ marginRight: 24 }}
+            />}
+          onClick={() => this.handleSubmit(dashboard)}>
+          {titleCase(dashboard.name)}
+        </MenuItem>)}
+      <FloatingActionButton
+        onClick={this.handleAddDashboardClicked}
+        mini={true}
+        style={{ marginRight: 20, float: 'right' }}>
+        <ContentAdd />
+      </FloatingActionButton>
+    </div>
 
   goFull = () => {
     this.setState({ isFull: true });
@@ -82,11 +100,11 @@ class DashboardLayout extends React.Component {
         <Drawer
           docked={false}
           width={300}
-          open={this.state.open}
-          onRequestChange={(open) => this.setState({ open })}
+          open={this.state.drawerOpen}
+          onRequestChange={(drawerOpen) => this.setState({ drawerOpen })}
         >
           <AppBar showMenuIconButton={false} title="Dashboards" />
-          {this.createMenuItems()}
+          {this.createDrawerItems()}
         </Drawer>
         <Fullscreen
           enabled={this.state.isFull}
@@ -97,6 +115,11 @@ class DashboardLayout extends React.Component {
             <Screen {...this.props} />
           </div>
         </Fullscreen>
+
+        <ModalDashboardForm
+          open={this.state.addNewDashboardOpen}
+          onClosed={this.handleModalDashboardFormClosed}
+        />
       </div>
     )
   }
