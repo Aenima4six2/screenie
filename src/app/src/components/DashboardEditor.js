@@ -7,36 +7,39 @@ import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
-class DashboardEditor extends React.Component {
-  static createNewPage = () => ({
-    name: '',
-    url: '',
-    forceProxy: false,
-    durationMs: '',
-    ordinal: ''
-  })
+const createNewPage = () => ({
+  name: '',
+  url: '',
+  forceProxy: false,
+  durationMs: '',
+  ordinal: ''
+})
 
+class DashboardEditor extends React.Component {
   static defaultProps = {
-    name: '',
-    pages: [DashboardEditor.createNewPage()]
+    dashboard: {
+      name: '',
+      pages: [createNewPage()]
+    }
   }
 
   static propTypes = {
-    name: PropTypes.string,
-    pages: PropTypes.arrayOf(PropTypes.object),
+    dashboard: PropTypes.object,
     onDashboardChanged: PropTypes.func
   }
 
   state = {
-    name: this.props.name,
-    pages: this.props.pages
+    name: this.props.dashboard.name,
+    pages: this.props.dashboard.pages
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      name: nextProps.name,
-      pages: nextProps.pages
-    })
+    if (nextProps.dashboard) {
+      this.setState({
+        name: nextProps.dashboard.name,
+        pages: nextProps.dashboard.pages
+      })
+    }
   }
 
   getDashboard = () => ({ name: this.state.name, pages: [...this.state.pages] })
@@ -47,7 +50,7 @@ class DashboardEditor extends React.Component {
 
   handleAddPageClicked = () => {
     this.setState({
-      pages: [...this.state.pages, DashboardEditor.createNewPage()]
+      pages: [...this.state.pages, createNewPage()]
     }, this.handleDashboardChanged)
   }
 

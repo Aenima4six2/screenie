@@ -11,12 +11,19 @@ class ModalDashboardForm extends React.Component {
   static propTypes = {
     onClosed: PropTypes.func,
     open: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    dashboard: PropTypes.object,
   }
 
   handleSave = () => {
-    const dashboard = this.editor.getDashboard()
-    this.props.dispatch(actions.addNewDashboard(dashboard))
+    const dashboard = { ...this.props.dashboard, ...this.editor.getDashboard() }
+    const isUpdate = this.props.dashboard
+    if (isUpdate) {
+      this.props.dispatch(actions.updateDashboard(dashboard))
+    }
+    else {
+      this.props.dispatch(actions.addDashboard(dashboard))
+    }
 
     this.setState({ open: false }, () => {
       if (this.props.onClosed) this.props.onClosed()
@@ -36,34 +43,33 @@ class ModalDashboardForm extends React.Component {
     return (
       <form>
         <Dialog
-          title="Add New Dashboard"
+          title={this.props.dashboard ? 'Edit Dashboard' : 'Add Dashboard'}
           actions={[
+            <FlatButton
+              label="Cancel"
+              primary={false}
+              keyboardFocused={false}
+              onClick={this.handleCancel}
+            />,
             <FlatButton
               label="Save"
               primary={true}
               keyboardFocused={true}
               disabled={!!this.editor}
               onClick={this.handleSave}
-            />,
-            <FlatButton
-              label="Cancel"
-              primary={false}
-              keyboardFocused={false}
-              onClick={this.handleCancel}
             />
           ]}
           open={this.props.open}
           modal={true}
           autoScrollBodyContent={true}>
-
-          <DashboardEditor ref={node => {
-            this.editor = node
-          }} />
+          <DashboardEditor
+            ref={node => { this.editor = node }}
+            dashboard={this.props.dashboard}
+          />
         </Dialog>
       </form>
     )
   }
 }
-
 
 export default connect()(ModalDashboardForm)

@@ -35,10 +35,27 @@ export const setCurrent = (current) => {
   }
 }
 
-export const addNewDashboard = (dashboard) => async (dispatch) => {
+export const addDashboard = (dashboard) => async (dispatch) => {
   const uri = `${getServerAddress()}/api/dashboards`
   const response = await fetch(uri, {
     method: 'POST',
+    body: JSON.stringify(dashboard),
+    headers: { 'Content-Type': 'application/json' }
+  })
+
+  if (response.status >= 200 && response.status < 300) {
+    dispatch(loadDashboardsAndSetCurrent())
+  } else {
+    var error = new Error(response.statusText)
+    error.response = response
+    throw error
+  }
+}
+
+export const updateDashboard = (dashboard) => async (dispatch) => {
+  const uri = `${getServerAddress()}/api/dashboards/${dashboard._id}`
+  const response = await fetch(uri, {
+    method: 'PUT',
     body: JSON.stringify(dashboard),
     headers: { 'Content-Type': 'application/json' }
   })
