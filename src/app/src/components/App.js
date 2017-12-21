@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import DashboardLayout from './DashboardLayout'
 import ModalDashboardSelector from './ModalDashboardSelector'
-import Loading from './Loading'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 import PropTypes from 'prop-types'

@@ -14,11 +14,11 @@ class PageEditor extends React.Component {
   }
 
   static propTypes = {
-    name: PropTypes.string,
-    url: PropTypes.string,
+    name: PropTypes.any,
+    url: PropTypes.any,
     forceProxy: PropTypes.bool.isRequired,
-    durationMs: PropTypes.string,
-    ordinal: PropTypes.string,
+    durationMs: PropTypes.any,
+    ordinal: PropTypes.any,
     onPageChanged: PropTypes.func
   }
 

@@ -18,46 +18,70 @@ export default class ModalDashboardSelector extends React.Component {
 
   state = {
     open: true,
-    addNewOpen: false,
+    addNewDashboardOpen: false,
+    editDashboardOpen: false,
     current: this.props.current
   }
 
-  handleSubmit = () => {
+  handleOpenDashboard = () => {
     this.props.onCurrentSelected(this.state.current)
     this.setState({ open: false })
   }
 
-  handleOnChanged = (e, value) => {
+  handleDashboardSelected = (e, value) => {
     this.setState({ current: value })
   }
 
-  handleAddNewClicked = () => {
-    this.setState({ open: false, addNewOpen: true })
+  handleAddDashboardOpened = () => {
+    this.setState({ open: false, addNewDashboardOpen: true })
   }
 
-  handleModalDashboardFormClosed = () => {
-    this.setState({ open: true, addNewOpen: false })
+  handleAddDashboardClosed = () => {
+    this.setState({ open: true, addNewDashboardOpen: false })
   }
+
+
+  handleEditDashboardOpened = () => {
+    this.setState({ drawerOpen: false, editDashboardOpen: true })
+  }
+
+  handleEditDashboardClosed = () => {
+    this.setState({ drawerOpen: true, editDashboardOpen: false })
+  }
+
 
   render() {
     return (
       <div>
         <Dialog
-          title="Select a Dashboard"
+          title="Dashboards"
           actions={[
             <FlatButton
-              label="Select"
+              label="Add"
+              primary={false}
+              keyboardFocused={false}
+              onClick={this.handleAddDashboardOpened}
+              style={{ float: 'left' }}
+            />,
+            <FlatButton
+              label="Edit"
+              primary={false}
+              keyboardFocused={false}
+              onClick={this.handleEditDashboardOpened}
+              disabled={!this.state.current}
+            />,
+            <FlatButton
+              label="Open"
               primary={true}
               keyboardFocused={true}
-              onClick={this.handleSubmit}
+              onClick={this.handleOpenDashboard}
               disabled={!this.state.current}
             />
           ]}
           open={this.state.open}
           modal={true}
           autoScrollBodyContent={true}>
-
-          <RadioButtonGroup name="dashboards" onChange={this.handleOnChanged}>
+          <RadioButtonGroup name="dashboards" onChange={this.handleDashboardSelected}>
             {this.props.available.map(dashboard =>
               <RadioButton
                 key={dashboard._id}
@@ -69,17 +93,20 @@ export default class ModalDashboardSelector extends React.Component {
                     className="fa fa-tachometer"
                     style={{ marginRight: 24 }}
                   />}
-              />)}
+              />
+            )}
           </RadioButtonGroup>
-
-          <div style={{ marginTop: '3rem' }}>
-            <FlatButton label="Add New" onClick={this.handleAddNewClicked} />
-          </div>
         </Dialog>
 
         <ModalDashboardForm
-          open={this.state.addNewOpen}
-          onClosed={this.handleModalDashboardFormClosed}
+          open={this.state.addNewDashboardOpen}
+          onClosed={this.handleAddDashboardClosed}
+        />
+
+        <ModalDashboardForm
+          open={this.state.editDashboardOpen}
+          onClosed={this.handleEditDashboardClosed}
+          dashboard={this.state.current}
         />
       </div>
     )

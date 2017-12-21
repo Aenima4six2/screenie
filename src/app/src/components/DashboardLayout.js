@@ -41,11 +41,12 @@ class DashboardLayout extends React.Component {
     this.setState({ drawerOpen: false })
   }
 
-  handleAddDashboardClicked = () => {
+
+  handleAddDashboardOpened = () => {
     this.setState({ drawerOpen: false, addNewDashboardOpen: true })
   }
 
-  handleModalDashboardFormClosed = () => {
+  handleAddDashboardClosed = () => {
     this.setState({ drawerOpen: true, addNewDashboardOpen: false })
   }
 
@@ -62,9 +63,9 @@ class DashboardLayout extends React.Component {
           {titleCase(dashboard.name)}
         </MenuItem>)}
       <FloatingActionButton
-        onClick={this.handleAddDashboardClicked}
+        onClick={this.handleAddDashboardOpened}
         mini={true}
-        style={{ marginRight: 20, float: 'right' }}>
+        style={{ marginTop: 40, marginRight: 20, float: 'right' }}>
         <ContentAdd />
       </FloatingActionButton>
     </div>
@@ -106,6 +107,7 @@ class DashboardLayout extends React.Component {
           <AppBar showMenuIconButton={false} title="Dashboards" />
           {this.createDrawerItems()}
         </Drawer>
+        
         <Fullscreen
           enabled={this.state.isFull}
           onChange={isFull => {
@@ -117,8 +119,9 @@ class DashboardLayout extends React.Component {
         </Fullscreen>
 
         <ModalDashboardForm
+          title="Add New Dashboard"
           open={this.state.addNewDashboardOpen}
-          onClosed={this.handleModalDashboardFormClosed}
+          onClosed={this.handleAddDashboardClosed}
         />
       </div>
     )
