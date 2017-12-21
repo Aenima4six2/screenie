@@ -28,27 +28,23 @@ class App extends Component {
   }
 
   render() {
-    if (this.props.available.length) {
-      if (this.props.current) {
-        return (
-          <DashboardLayout
-            onCurrentSelected={this.setCurrent}
-            {...this.props}
-          />
-        )
-      }
-
+    if (this.props.current) {
       return (
-        <ModalDashboardSelector
+        <DashboardLayout
           onCurrentSelected={this.setCurrent}
-          current={this.props.current}
-          available={this.props.available}
           {...this.props}
         />
       )
     }
 
-    return <Loading />
+    return (
+      <ModalDashboardSelector
+        onCurrentSelected={this.setCurrent}
+        current={this.props.current}
+        available={this.props.available}
+        {...this.props}
+      />
+    )
   }
 }
 
