@@ -39,7 +39,7 @@ class ModalDashboardForm extends React.Component {
       this.props.dispatch(actions.addDashboard(mergedDashboard))
     }
 
-    this.setState({ open: false }, () => {
+    this.setState({ open: false, dashboard: undefined }, () => {
       if (this.props.onClosed) this.props.onClosed()
     })
   }
