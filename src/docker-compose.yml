@@ -19,3 +19,5 @@ services:
             - screenie-mongo
         environment:
             - MONGODB_CONNECTION-URI=mongodb://screenie-mongo:27017/screenie
+            - PORT=80
+            - NODE_ENV=Production
