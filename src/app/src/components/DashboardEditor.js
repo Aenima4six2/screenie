@@ -42,10 +42,17 @@ class DashboardEditor extends React.Component {
     }
   }
 
-  getDashboard = () => ({ name: this.state.name, pages: [...this.state.pages] })
+  getDashboard = () => ({
+    name: this.state.name,
+    pages: [...this.state.pages]
+  })
 
   handleNameChange = (event) => {
-    this.setState({ name: event.target.value }, this.handleDashboardChanged)
+    const name = event.target.value
+    let nameError = ''
+    if (!name) nameError = 'Dashboard Name is required!'
+    else if (name && name.length > 200) nameError = 'Dashboard Name must be 200 characters or less'
+    this.setState({ name, nameError }, this.handleDashboardChanged)
   }
 
   handleAddPageClicked = () => {
@@ -60,17 +67,17 @@ class DashboardEditor extends React.Component {
     this.setState({ pages }, this.handleDashboardChanged)
   }
 
-  handleOnPageChanged = (index, page) => {
+  handleOnPageChanged = (index, page, pagesError) => {
     const pages = [...this.state.pages]
-    pages.splice(index, 1)
-    pages.push(page)
-    this.setState({ pages }, this.handleDashboardChanged)
+    pages.splice(index, 1, page)
+    this.setState({ pages, pagesError }, this.handleDashboardChanged)
   }
 
   handleDashboardChanged = () => {
     if (this.props.onDashboardChanged) {
       const dashboard = this.getDashboard()
-      this.props.onDashboardChanged(dashboard)
+      const hasErrors = this.state.nameError || this.state.pagesError
+      this.props.onDashboardChanged(dashboard, hasErrors)
     }
   }
 
@@ -81,6 +88,7 @@ class DashboardEditor extends React.Component {
           floatingLabelText="Dashboard Name"
           hintText="Sample Dashboard"
           value={this.state.name}
+          errorText={this.state.nameError}
           onChange={this.handleNameChange}
         />
         <br />
@@ -93,7 +101,8 @@ class DashboardEditor extends React.Component {
                 forceProxy={page.forceProxy}
                 durationMs={page.durationMs}
                 ordinal={page.ordinal}
-                onPageChanged={(page) => this.handleOnPageChanged(idx, page)}
+                onPageChanged={(page, hasErrors) =>
+                  this.handleOnPageChanged(idx, page, hasErrors)}
               />
               {this.state.pages.length > 1 &&
                 <FlatButton

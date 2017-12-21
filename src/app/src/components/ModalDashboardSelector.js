@@ -6,14 +6,18 @@ import PropTypes from 'prop-types'
 import { titleCase } from '../utilities'
 import FontIcon from 'material-ui/FontIcon'
 import ModalDashboardForm from './ModalDashboardForm'
+import { withRouter } from 'react-router-dom'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
 
-export default class ModalDashboardSelector extends React.Component {
+class ModalDashboardSelector extends React.Component {
   static propTypes = {
     onCurrentSelected: PropTypes.func.isRequired,
     current: PropTypes.object,
-    available: PropTypes.arrayOf(PropTypes.object).isRequired
+    available: PropTypes.arrayOf(PropTypes.object).isRequired,
+    match: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   }
 
   state = {
@@ -24,7 +28,9 @@ export default class ModalDashboardSelector extends React.Component {
   }
 
   handleOpenDashboard = () => {
-    this.props.onCurrentSelected(this.state.current)
+    const dashboard = this.state.current
+    this.props.history.push(`/${dashboard.name}`)
+    this.props.onCurrentSelected(dashboard)
     this.setState({ open: false })
   }
 
@@ -112,3 +118,5 @@ export default class ModalDashboardSelector extends React.Component {
     )
   }
 }
+
+export default withRouter(ModalDashboardSelector)

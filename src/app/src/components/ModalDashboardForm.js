@@ -15,14 +15,28 @@ class ModalDashboardForm extends React.Component {
     dashboard: PropTypes.object,
   }
 
+  state = {
+    canSave: true,
+    dashboard: this.props.dashboard
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.dashboard) {
+      this.setState({
+        canSave: true,
+        dashboard: nextProps.dashboard
+      })
+    }
+  }
+
   handleSave = () => {
-    const dashboard = { ...this.props.dashboard, ...this.editor.getDashboard() }
-    const isUpdate = this.props.dashboard
-    if (isUpdate) {
-      this.props.dispatch(actions.updateDashboard(dashboard))
+    const existingDashboard = this.props.dashboard
+    const mergedDashboard = { ...existingDashboard, ...this.state.dashboard }
+    if (existingDashboard) {
+      this.props.dispatch(actions.updateDashboard(mergedDashboard))
     }
     else {
-      this.props.dispatch(actions.addDashboard(dashboard))
+      this.props.dispatch(actions.addDashboard(mergedDashboard))
     }
 
     this.setState({ open: false }, () => {
@@ -37,6 +51,10 @@ class ModalDashboardForm extends React.Component {
 
   handleAddNewClicked = () => {
     this.setState({ open: false })
+  }
+
+  handleDashboardChanged = (dashboard, hasErrors) => {
+    this.setState({ dashboard, canSave: dashboard && !hasErrors })
   }
 
   render() {
@@ -55,7 +73,7 @@ class ModalDashboardForm extends React.Component {
               label="Save"
               primary={true}
               keyboardFocused={true}
-              disabled={!!this.editor}
+              disabled={!this.state.canSave}
               onClick={this.handleSave}
             />
           ]}
@@ -64,7 +82,8 @@ class ModalDashboardForm extends React.Component {
           autoScrollBodyContent={true}>
           <DashboardEditor
             ref={node => { this.editor = node }}
-            dashboard={this.props.dashboard}
+            dashboard={this.state.dashboard}
+            onDashboardChanged={this.handleDashboardChanged}
           />
         </Dialog>
       </form>
