@@ -39,7 +39,7 @@ export default class ModalDashboardSelector extends React.Component {
     this.setState({ open: true, addNewOpen: false })
   }
 
-  renderSelector() {
+  render() {
     return (
       <div>
         <Dialog
@@ -83,24 +83,5 @@ export default class ModalDashboardSelector extends React.Component {
         />
       </div>
     )
-  }
-
-  renderNoDashboards() {
-    return (
-      <div>
-        <Dialog
-          modal={true}
-          open={this.state.open}
-        >
-          No Dashboards found. Please create one and reload the page!
-        </Dialog>
-      </div>
-    )
-  }
-
-  render() {
-    return this.props.available.length
-      ? this.renderSelector()
-      : this.renderNoDashboards()
   }
 }
