@@ -64,7 +64,7 @@ function rewrite(html, url) {
 
   if (process.env.NODE_ENV === 'production') {
     $('a').each(() => {
-      $(this).attr('href', 'http://example.com/proxy?url=' + $(this).attr('href'))
+      $(this).attr('href', 'http://localhost/proxy?url=' + $(this).attr('href'))
     })
   }
 
