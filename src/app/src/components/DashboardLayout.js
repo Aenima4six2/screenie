@@ -50,26 +50,6 @@ class DashboardLayout extends React.Component {
     this.setState({ drawerOpen: true, addNewDashboardOpen: false })
   }
 
-  createDrawerItems = () =>
-    <div>
-      {this.props.available.map((dashboard, idx) =>
-        <MenuItem key={idx}
-          leftIcon={
-            <FontIcon
-              className="fa fa-tachometer"
-              style={{ marginRight: 24 }}
-            />}
-          onClick={() => this.handleSubmit(dashboard)}>
-          {titleCase(dashboard.name)}
-        </MenuItem>)}
-      <FloatingActionButton
-        onClick={this.handleAddDashboardOpened}
-        mini={true}
-        style={{ marginTop: 40, marginRight: 20, float: 'right' }}>
-        <ContentAdd />
-      </FloatingActionButton>
-    </div>
-
   goFull = () => {
     this.setState({ isFull: true });
   }
@@ -105,9 +85,26 @@ class DashboardLayout extends React.Component {
           onRequestChange={(drawerOpen) => this.setState({ drawerOpen })}
         >
           <AppBar showMenuIconButton={false} title="Dashboards" />
-          {this.createDrawerItems()}
+          <div>
+            {this.props.available.map((dashboard, idx) =>
+              <MenuItem key={idx}
+                leftIcon={
+                  <FontIcon
+                    className="fa fa-tachometer"
+                    style={{ marginRight: 24 }}
+                  />}
+                onClick={() => this.handleSubmit(dashboard)}>
+                {titleCase(dashboard.name)}
+              </MenuItem>)}
+            <FloatingActionButton
+              onClick={this.handleAddDashboardOpened}
+              mini={true}
+              style={{ marginTop: 40, marginRight: 20, float: 'right' }}>
+              <ContentAdd />
+            </FloatingActionButton>
+          </div>
         </Drawer>
-        
+
         <Fullscreen
           enabled={this.state.isFull}
           onChange={isFull => {
