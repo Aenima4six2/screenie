@@ -17,10 +17,7 @@ export const loadDashboardsAndSetCurrent = (nameOrId) => async (dispatch) => {
   const uri = `${getServerAddress()}/api/dashboards`
   const response = await fetch(uri)
   const available = await response.json()
-  dispatch({
-    type: 'LOAD_AVAILABLE',
-    available
-  })
+  dispatch({ type: 'LOAD_AVAILABLE', available })
 
   if (nameOrId) {
     const current = available.find(x => x._id === nameOrId || x.name === nameOrId)
