@@ -29,7 +29,7 @@ class ModalDashboardSelector extends React.Component {
 
   handleOpenDashboard = () => {
     const dashboard = this.state.current
-    this.props.history.push(`/${dashboard.name}`)
+    this.props.history.push(`/dashboards/${dashboard.name}`)
     this.props.onCurrentSelected(dashboard)
     this.setState({ open: false })
   }

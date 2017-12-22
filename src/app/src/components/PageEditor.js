@@ -73,7 +73,7 @@ class PageEditor extends React.Component {
     const durationMs = event.target.value
     let durationMsError = ''
     if (!durationMs) durationMsError = 'Duration is required!'
-    else if (!Number.isInteger(parseInt(durationMs)) || parseInt(durationMs) < 0)
+    else if (!Number.isInteger(parseInt(durationMs, 10)) || parseInt(durationMs, 10) < 0)
       durationMsError = 'Duration must be a whole number greater than zero!'
     this.setState({ durationMs, durationMsError }, this.handlePageChanged)
   }
