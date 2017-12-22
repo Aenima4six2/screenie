@@ -5,6 +5,7 @@ import PageEditor from './PageEditor'
 import FlatButton from 'material-ui/FlatButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
+import Toggle from 'material-ui/Toggle'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
 const createNewPage = () => ({
@@ -19,7 +20,8 @@ class DashboardEditor extends React.Component {
   static defaultProps = {
     dashboard: {
       name: '',
-      pages: [createNewPage()]
+      pages: [createNewPage()],
+      isFullScreen: false
     }
   }
 
@@ -30,21 +32,24 @@ class DashboardEditor extends React.Component {
 
   state = {
     name: this.props.dashboard.name,
-    pages: this.props.dashboard.pages
+    pages: this.props.dashboard.pages,
+    isFullScreen: this.props.dashboard.isFullScreen
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.dashboard) {
       this.setState({
         name: nextProps.dashboard.name,
-        pages: nextProps.dashboard.pages
+        pages: nextProps.dashboard.pages,
+        isFullScreen: nextProps.dashboard.isFullScreen
       })
     }
   }
 
   getDashboard = () => ({
     name: this.state.name,
-    pages: [...this.state.pages]
+    pages: [...this.state.pages],
+    isFullScreen: this.state.isFullScreen
   })
 
   handleNameChange = (event) => {
@@ -73,6 +78,11 @@ class DashboardEditor extends React.Component {
     this.setState({ pages, pagesError }, this.handleDashboardChanged)
   }
 
+  handleIsFullScreenToggle = (event, isInputChecked) => {
+    const isFullScreen = isInputChecked
+    this.setState({ isFullScreen }, this.handleDashboardChanged)
+  }
+
   handleDashboardChanged = () => {
     if (this.props.onDashboardChanged) {
       const dashboard = this.getDashboard()
@@ -84,14 +94,24 @@ class DashboardEditor extends React.Component {
   render() {
     return (
       <div style={{ marginLeft: '2rem' }}>
-        <TextField
-          floatingLabelText="Dashboard Name"
-          hintText="Sample Dashboard"
-          value={this.state.name}
-          errorText={this.state.nameError}
-          onChange={this.handleNameChange}
-        />
-        <br />
+        <div>
+          <TextField
+            floatingLabelText="Dashboard Name"
+            hintText="Sample Dashboard"
+            value={this.state.name}
+            errorText={this.state.nameError}
+            onChange={this.handleNameChange}
+          />
+          <p />
+          <Toggle
+            label="Is Fullscreen"
+            labelPosition="right"
+            toggled={this.state.isFullScreen}
+            onToggle={this.handleIsFullScreenToggle}
+            style={{ marginBottom: 16 }}
+          />
+        </div>
+        <h4>Pages</h4>
         <ol>
           {this.state.pages.map((page, idx) =>
             <li key={idx}>

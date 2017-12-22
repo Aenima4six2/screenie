@@ -6,6 +6,8 @@ import * as actions from '../actions'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
 
+const fiveMin = 900000
+
 class App extends Component {
   static propTypes = {
     current: PropTypes.object,
@@ -19,7 +21,18 @@ class App extends Component {
     if (!this.props.available.length) {
       const nameOrId = this.props.match.params.nameOrId
       this.props.dispatch(actions.loadDashboardsAndSetCurrent(nameOrId))
+      this.schedule = setInterval(() => {
+        const dashboard = this.props && this.props.current
+        if (dashboard) {
+          const id = dashboard._id
+          this.props.dispatch(actions.loadDashboardsAndSetCurrent(id))
+        }
+      }, fiveMin)
     }
+  }
+
+  componentWillUnmount() {
+    if (this.schedule) clearInterval(this.schedule)
   }
 
   setCurrent = (current) => {

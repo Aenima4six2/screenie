@@ -28,7 +28,13 @@ class DashboardLayout extends React.Component {
   state = {
     drawerOpen: false,
     addNewDashboardOpen: false,
-    isFull: false
+    isFullScreen: this.props.current && this.props.current.isFullScreen
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.current) {
+      this.setState({ isFullScreen: nextProps.current && nextProps.current.isFullScreen })
+    }
   }
 
   onToggleDrawer = () => {
@@ -51,17 +57,19 @@ class DashboardLayout extends React.Component {
   }
 
   goFull = () => {
-    this.setState({ isFull: true });
+    this.setState({ isFullScreen: true });
   }
 
   render() {
-    const screenWrapperClass = this.state.isFull
-      ? "fullscreen-dashboard"
-      : "dashboard"
+    const appBarStyle = this.state.isFullScreen ? { display: 'none' } : {}
+    const screenWrapperClass = this.state.isFullScreen
+      ? 'fullscreen-dashboard'
+      : 'dashboard'
 
     return (
       <div>
         <AppBar
+          style={appBarStyle}
           title={titleCase(this.props.current.name)}
           onLeftIconButtonClick={this.onToggleDrawer}
           iconElementRight={
@@ -82,8 +90,7 @@ class DashboardLayout extends React.Component {
           docked={false}
           width={300}
           open={this.state.drawerOpen}
-          onRequestChange={(drawerOpen) => this.setState({ drawerOpen })}
-        >
+          onRequestChange={(drawerOpen) => this.setState({ drawerOpen })}>
           <AppBar showMenuIconButton={false} title="Dashboards" />
           <div>
             {this.props.available.map((dashboard, idx) =>
@@ -106,10 +113,8 @@ class DashboardLayout extends React.Component {
         </Drawer>
 
         <Fullscreen
-          enabled={this.state.isFull}
-          onChange={isFull => {
-            this.setState({ isFull })
-          }}>
+          enabled={this.state.isFullScreen}
+          onChange={isFullScreen => { this.setState({ isFullScreen }) }}>
           <div className={screenWrapperClass}>
             <Screen {...this.props} />
           </div>
