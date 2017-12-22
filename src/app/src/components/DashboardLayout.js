@@ -12,6 +12,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import { withRouter } from 'react-router-dom'
 import ModalDashboardForm from './ModalDashboardForm'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import IconMenu from 'material-ui/IconMenu'
 import './DashboardLayout.css'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
@@ -42,7 +44,7 @@ class DashboardLayout extends React.Component {
   }
 
   handleSubmit = (dashboard) => {
-    this.props.history.push(`/${dashboard.name}`)
+    this.props.history.push(`/dashboards/${dashboard.name}`)
     this.props.onCurrentSelected(dashboard)
     this.setState({ drawerOpen: false })
   }
@@ -60,6 +62,30 @@ class DashboardLayout extends React.Component {
     this.setState({ isFullScreen: true });
   }
 
+  handleSetupClicked = () => {
+    this.props.history.push('/setup')
+  }
+
+  renderContext = () =>
+    <IconMenu
+      iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+      targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+    >
+      <MenuItem primaryText="Fullscreen" onClick={this.goFull} leftIcon={
+        <FontIcon
+          className="fa fa-desktop"
+          style={{ color: 'white', cursor: 'pointer' }}
+        />}
+      />
+      <MenuItem primaryText="Setup" onClick={this.handleSetupClicked} leftIcon={
+        <FontIcon
+          className="fa fa-cogs"
+          style={{ color: 'white', cursor: 'pointer' }}
+        />}
+      />
+    </IconMenu>
+
   render() {
     const appBarStyle = this.state.isFullScreen ? { display: 'none' } : {}
     const screenWrapperClass = this.state.isFullScreen
@@ -72,19 +98,7 @@ class DashboardLayout extends React.Component {
           style={appBarStyle}
           title={titleCase(this.props.current.name)}
           onLeftIconButtonClick={this.onToggleDrawer}
-          iconElementRight={
-            <IconButton tooltip="Fullscreen">
-              <FontIcon
-                className="fa fa-desktop"
-                onClick={this.goFull}
-                style={{
-                  marginRight: '1rem',
-                  marginTop: '.5rem',
-                  color: 'black',
-                  cursor: 'pointer'
-                }}
-              />
-            </IconButton>}
+          iconElementRight={this.renderContext()}
         />
         <Drawer
           docked={false}
