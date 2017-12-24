@@ -4,7 +4,7 @@ const handlers = require('../middleware/handlers')
 const handleRejections = handlers.requestRejectionHandler
 const halson = require('halson')
 const statusCode = require('http-status-codes')
-const Dashboard = require('../database/models').getDashboard()
+const Dashboard = require('../database').getModel('Dashboard')
 
 /**
  * GET - Gets all dashboards
@@ -39,10 +39,13 @@ router.post('/', handleRejections(async (req, res) => {
   const data = req.body
   const model = new Dashboard(data)
   await model.save()
+  const dsm = req.dashboardSocketManager
+  dsm.createDashboardNamespace(model._id)
 
   const resource = halson(model.toObject()).addLink('self', `${req.baseUrl}/${model.id}`)
   res.location(resource.getLink('self').href)
   res.status(statusCode.CREATED).json(resource)
+
 }))
 
 
@@ -72,8 +75,8 @@ router.delete('/:id', handleRejections(async (req, res) => {
   const id = req.params.id
   if (!id) throw new Error('Invalid Id', { status: statusCode.BAD_REQUEST })
 
-  await await Dashboard.remove({ _id: id })
-  res.status(statusCode.OK).send()
+  await Dashboard.remove({ _id: id })
+  res.sendStatus(statusCode.OK)
 }))
 
 module.exports = router
