@@ -3,6 +3,8 @@ const logger = require('../logging').create('server')
 const http = require('http')
 const port = normalizePort(process.env.PORT || '3000')
 const db = require('../database')
+const appFactory = require('../app')
+const DashboardSocketManager = require('../sockets/DashboardSocketManager')
 
 logger.info('Screenie Starting')
 process.on('unhandledRejection', error => {
@@ -18,12 +20,20 @@ db.connect().then(() => startApplication()).catch(err => {
   process.exit(1)
 })
 
-function startApplication() {
+async function startApplication() {
   logger.info('Starting server...')
-  const app = require('../app')
-  app.set('port', port)
+
+  let dashboardSocketManager
+  const app = appFactory.create([(req, res, next) => {
+    req.dashboardSocketManager = dashboardSocketManager
+    next()
+  }])
 
   const server = http.createServer(app)
+  const dashboardIds = await getDashboardIds()
+  dashboardSocketManager = new DashboardSocketManager({ server, logger, dashboardIds })
+
+  app.set('port', port)
   server.on('error', (error) => {
     if (error.syscall !== 'listen') {
       throw error
@@ -69,4 +79,11 @@ function normalizePort(val) {
   }
 
   return false
+}
+
+async function getDashboardIds() {
+  const dashboard = db.getModel('Dashboard')
+  const projected = await dashboard.find({}, 'id')
+  const dashboardIds = projected.map(x => x.id)
+  return dashboardIds
 }

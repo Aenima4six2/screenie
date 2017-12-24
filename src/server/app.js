@@ -1,38 +1,45 @@
-const express = require('express')
-const path = require('path')
-const logger = require('./logging/expressLogger')
-const cookieParser = require('cookie-parser')
-const bodyParser = require('body-parser')
-const proxy = require('./routes/proxy')
-const dashboards = require('./routes/dashboards')
-const handlers = require('./middleware/handlers')
-const app = express()
+module.exports.create = (initMiddleware) => {
+  const express = require('express')
+  const path = require('path')
+  const logger = require('./logging/expressLogger')
+  const cookieParser = require('cookie-parser')
+  const bodyParser = require('body-parser')
+  const proxy = require('./routes/proxy')
+  const notifications = require('./routes/notifications')
+  const dashboards = require('./routes/dashboards')
+  const handlers = require('./middleware/handlers')
+  const app = express()
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'pug')
+  // Init middleware
+  initMiddleware.forEach(middleware => app.use(middleware))
 
-// request handlers
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookieParser())
+  // view engine setup
+  app.set('views', path.join(__dirname, 'views'))
+  app.set('view engine', 'pug')
 
-// Route Logging - MUST REGISTER BEFORE all routers.
-app.use(logger.createRouteLogger())
+  // request handlers
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(cookieParser())
 
-// Routing
-app.use('/proxy', proxy)
-app.use('/api/dashboards', dashboards)
-app.use(express.static(path.join(__dirname, 'public')))
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
+  // Route Logging - MUST REGISTER BEFORE all routers.
+  app.use(logger.createRouteLogger())
 
-// Error Logging - MUST REGISTER BEFORE all routers.
-app.use(logger.createErrorLogger())
+  // Routing
+  app.use('/proxy', proxy)
+  app.use('/api/dashboards', dashboards)
+  app.use('/api/notifications', notifications)
+  app.use(express.static(path.join(__dirname, 'public')))
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+  })
 
-// response handlers
-app.use(handlers.notFound)
-app.use(handlers.error)
+  // Error Logging - MUST REGISTER BEFORE all routers.
+  app.use(logger.createErrorLogger())
 
-module.exports = app
+  // response handlers
+  app.use(handlers.notFound)
+  app.use(handlers.error)
+
+  return app
+}

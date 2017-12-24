@@ -11,6 +11,7 @@ const schema = new Schema({
   layout: { type: Layout },
   isFullScreen: { type: Boolean },
   isActive: { type: Boolean, default: true, required: '{PATH} is required!' },
+  webhookTokens: { type: [String] }
 }, { timestamps: true, collection: name })
 
 module.exports = {
