@@ -25,13 +25,34 @@ class DashboardSocketManager {
     }
   }
 
-  sendDashboardNotification(dashboardId, message) {
-    const nsp = this._namespaces[dashboardId]
-    if(!nsp) throw new Error(`${dashboardId} Namespace not created!`)
-    
-    nsp.emit('notification', message)
-    this._logger.info(`Sent ${dashboardId} notification ${JSON.stringify(message)}`)
+  sendDashboardNotification(message, ...dashboardIds) {
+    const namespaces = dashboardIds.length
+      ? [...dashboardIds]
+      : Object.keys(this._namespaces)
+
+    namespaces.forEach(namespace => {
+      const nsp = this._namespaces[namespace]
+      if (!nsp) throw new Error(`${namespace} Namespace not created!`)
+
+      nsp.emit('notification', message)
+      this._logger.info(`Sent ${namespace} notification ${JSON.stringify(message)}`)
+    })
   }
+
+  reloadDashboard(...dashboardIds) {
+    const namespaces = dashboardIds.length
+      ? [...dashboardIds]
+      : Object.keys(this._namespaces)
+
+    namespaces.forEach(namespace => {
+      const nsp = this._namespaces[namespace]
+      if (!nsp) throw new Error(`${namespace} Namespace not created!`)
+
+      nsp.emit('reload')
+      this._logger.info(`Sent ${namespace} reload command`)
+    })
+  }
+
 }
 
 module.exports = DashboardSocketManager

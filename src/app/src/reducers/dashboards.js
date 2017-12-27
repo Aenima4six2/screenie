@@ -1,3 +1,5 @@
+import * as actions from '../actions'
+
 const maxPanes = 4
 const minPanes = 1
 const defaultState = {
@@ -6,24 +8,24 @@ const defaultState = {
 
 const available = (state = defaultState, action) => {
   switch (action.type) {
-    case 'LOAD_AVAILABLE': {
+    case actions.LOAD_AVAILABLE: {
       return {
         ...state,
         available: [...action.available]
       }
     }
-    case 'SET_CURRENT': {
+    case actions.SET_CURRENT: {
       return {
         ...state,
         current: { ...action.current }
       }
     }
-    case 'ADD_PANE':
+    case actions.ADD_PANE:
       const panes = state.layout.panes < maxPanes
         ? state.layout.panes + 1
         : maxPanes
       return { ...state, current: { layout: { panes } } }
-    case 'REMOVE_PANE': {
+    case actions.REMOVE_PANE: {
       const panes = state.layout.panes > minPanes
         ? state.layout.panes - 1
         : minPanes

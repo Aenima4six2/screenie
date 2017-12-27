@@ -8,32 +8,32 @@ export const SET_CURRENT = 'SET_CURRENT'
 
 export const addPane = () => {
   return {
-    type: 'ADD_PANE'
+    type: ADD_PANE
   }
 }
 
 export const removePane = () => {
   return {
-    type: 'REMOVE_PANE'
+    type: REMOVE_PANE
   }
 }
 
-export const loadDashboardsAndSetCurrent = (nameOrId) => async (dispatch) => {
+export const loadAvailableDashboards = (nameOrId) => async (dispatch) => {
   const uri = `${getServerAddress()}/api/dashboards`
   const response = await fetch(uri)
   const available = await response.json()
 
   if (nameOrId) {
     const current = available.find(x => x._id === nameOrId || x.name === nameOrId)
-    dispatch(setCurrent(current))
+    if (current) dispatch(setCurrent(current))
   }
 
-  dispatch({ type: 'LOAD_AVAILABLE', available })
+  dispatch({ type: LOAD_AVAILABLE, available })
 }
 
 export const setCurrent = (current) => {
   return {
-    type: 'SET_CURRENT',
+    type: SET_CURRENT,
     current
   }
 }
@@ -47,7 +47,7 @@ export const addDashboard = (dashboard) => async (dispatch) => {
   })
 
   if (response.status >= 200 && response.status < 300) {
-    dispatch(loadDashboardsAndSetCurrent())
+    dispatch(loadAvailableDashboards())
   } else {
     var error = new Error(response.statusText)
     error.response = response
@@ -64,7 +64,7 @@ export const updateDashboard = (dashboard) => async (dispatch) => {
   })
 
   if (response.status >= 200 && response.status < 300) {
-    dispatch(loadDashboardsAndSetCurrent())
+    dispatch(loadAvailableDashboards())
   } else {
     var error = new Error(response.statusText)
     error.response = response

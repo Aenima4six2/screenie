@@ -41,6 +41,7 @@ router.post('/', handleRejections(async (req, res) => {
   await model.save()
   const dsm = req.dashboardSocketManager
   dsm.createDashboardNamespace(model._id)
+  dsm.reloadDashboard()
 
   const resource = halson(model.toObject()).addLink('self', `${req.baseUrl}/${model.id}`)
   res.location(resource.getLink('self').href)
@@ -62,6 +63,9 @@ router.put('/:id', handleRejections(async (req, res) => {
     new: true, runValidators: true
   })
 
+  const dsm = req.dashboardSocketManager
+  dsm.reloadDashboard()
+
   // Send resource
   const resource = halson(model.toObject()).addLink('self', `${req.baseUrl}/${model.id}`)
   res.status(statusCode.OK).json(resource)
@@ -75,6 +79,9 @@ router.delete('/:id', handleRejections(async (req, res) => {
   const id = req.params.id
   if (!id) throw new Error('Invalid Id', { status: statusCode.BAD_REQUEST })
 
+  const dsm = req.dashboardSocketManager
+  dsm.reloadDashboard()
+  
   await Dashboard.remove({ _id: id })
   res.sendStatus(statusCode.OK)
 }))

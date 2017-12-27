@@ -8,33 +8,46 @@ let socket
 export const notificationSocket = store => next => action => {
   // Send message
   if (action.type === actions.SET_CURRENT) {
-    //Connect
-    const dashboard = action.current
-    const nspUri = `${getServerAddress()}/${dashboard._id}`
-    if (socket && nspUri.endsWith(socket.nsp)) return
-    else if (socket) {
+    if (!action.current) {
+      next(action)
+      return
+    }
+
+    const activeDashboardId = action.current._id
+    const nspUri = `${getServerAddress()}/${activeDashboardId}`
+    if (socket && nspUri.endsWith(socket.nsp)) {
+      next(action)
+      return
+    }
+    
+    // Re-Connect
+    if (socket) {
       socket.removeAllListeners('notification')
+      socket.removeAllListeners('reload')
       socket.close()
     }
 
+    // Connect
     socket = io(nspUri)
-    socket.on('notification', sendAlert)
+    socket.on('notification', (message) => {
+      const alert = getAlert(message.type)
+      alert(createHtml(message), {
+        position: message.position || 'top-right',
+        effect: 'bouncyflip',
+        beep: message.beep || false,
+        timeout: message.timeout || 5000,
+        offset: message.offset || 100,
+        html: true
+      })
+    })
+
+    socket.on('reload', () => {
+      store.dispatch(actions.loadAvailableDashboards(activeDashboardId))
+    })
   }
 
   // Next middleware
   next(action)
-}
-
-const sendAlert = (message) => {
-  const alert = getAlert(message.type)
-  alert(createHtml(message), {
-    position: message.position || 'top-right',
-    effect: 'bouncyflip',
-    beep: message.beep || false,
-    timeout: message.timeout || 5000,
-    offset: message.offset || 100,
-    html: true
-  })
 }
 
 const getAlert = (type = '') => {
