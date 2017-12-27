@@ -6,6 +6,7 @@ const path = require('path')
 const getNonIndexJsFiles = require('../utilities/fsUtils').getNonIndexJsFiles
 const mongoose = require('mongoose')
 const logger = require('../logging').create('database')
+const utils = require('../utilities/asyncUtils')
 
 mongoose.Promise = global.Promise
 
@@ -13,8 +14,13 @@ module.exports.getCurrentConnection = () => mongoose.connection
 
 module.exports.getModel = (name) => mongoose.model(name)
 
-module.exports.connect = async () => {
+module.exports.connect = async (tries = 1000) => utils.retryPromise({
+  operation: connect, tries, onRetry: (counter) => {
+    logger.error(`Retrying operation! Attempt [${counter}] of [${tries}].`)
+  }
+})
 
+async function connect() {
   logger.info(`Connecting to mongo at ${mongoUri}`)
   try {
     await mongoose.connect(mongoUri, connectionOptions)

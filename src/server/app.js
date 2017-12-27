@@ -29,6 +29,7 @@ module.exports.create = (initMiddleware) => {
   app.use('/proxy', proxy)
   app.use('/api/dashboards', dashboards)
   app.use('/api/notifications', notifications)
+  app.use('/beeps', express.static(path.join(__dirname, 'beeps')))
   app.use(express.static(path.join(__dirname, 'public')))
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))

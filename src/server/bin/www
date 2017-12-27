@@ -6,7 +6,6 @@ const db = require('../database')
 const appFactory = require('../app')
 const DashboardSocketManager = require('../sockets/DashboardSocketManager')
 
-logger.info('Screenie Starting')
 process.on('unhandledRejection', error => {
   logger.error('Unhandled Promise Rejection -> ', error)
 })
@@ -15,10 +14,10 @@ process.on('uncaughtException', error => {
   logger.error('Unhandled Error -> ', error)
 })
 
-db.connect().then(() => startApplication()).catch(err => {
-  logger.error('Error occurred while starting up ->', err)
-  process.exit(1)
-})
+logger.info('Screenie Starting')
+db.connect()
+  .then(startApplication, failFast)
+  .catch(failFast)
 
 async function startApplication() {
   logger.info('Starting server...')
@@ -86,4 +85,9 @@ async function getDashboardIds() {
   const projected = await dashboard.find({}, 'id')
   const dashboardIds = projected.map(x => x.id)
   return dashboardIds
+}
+
+function failFast(err) {
+  logger.error('Error occurred while starting up ->', err)
+  process.exit(1)
 }
