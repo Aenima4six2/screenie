@@ -142,7 +142,7 @@ class ModalDashboardSelector extends React.Component {
         />
 
         <Dialog
-          title="Really Delete?"
+          title="Delete?"
           open={this.state.removeDashboardDialogOpen}
           modal={true}
           actions={[<FlatButton
@@ -156,10 +156,13 @@ class ModalDashboardSelector extends React.Component {
             label="Yup"
             primary={true}
             keyboardFocused={true}
+            contentStyle={{ width: '100%', maxWidth: 'none', }}
             onClick={() => this.handleRemoveDashboard()}
             disabled={!this.state.current}
           />]}
-        ></Dialog>
+        >
+        Are you really sure you want to delete the selected dashboard?
+        </Dialog>
 
       </div >
     )
