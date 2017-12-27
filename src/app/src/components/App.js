@@ -19,14 +19,6 @@ class App extends Component {
   componentDidMount() {
     const nameOrId = this.props.match.params.nameOrId
     this.props.dispatch(actions.loadDashboardsAndSetCurrent(nameOrId))
-
-    this.schedule = setInterval(() => {
-      const dashboard = this.props && this.props.current
-      if (dashboard) {
-        const id = dashboard._id
-        this.props.dispatch(actions.loadDashboardsAndSetCurrent(id))
-      }
-    }, fiveMin)
   }
 
   componentWillUnmount() {
@@ -38,11 +30,12 @@ class App extends Component {
   }
 
   render() {
-    if (this.props.available) {
+    if (this.props.available.length) {
       return this.props.current
         ? <DashboardLayout onCurrentSelected={this.setCurrent} {...this.props} />
         : <Redirect to={{ pathname: '/setup', state: { from: this.props.location } }} />
     }
+    
     return <Loading />
   }
 }

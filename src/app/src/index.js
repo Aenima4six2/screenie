@@ -9,6 +9,9 @@ import theme from './theme'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Setup from './components/Setup'
 import 'typeface-roboto'
+import 'react-s-alert/dist/s-alert-default.css'
+import 'react-s-alert/dist/s-alert-css-effects/bouncyflip.css'
+import Alert from 'react-s-alert'
 
 const redirection = {
   pathname: '/setup',
@@ -19,10 +22,11 @@ render(
   <Provider store={Store}>
     <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
       <Router>
-        <div>
+        <div id="app-root">
           <Route exact path="/" component={() => <Redirect to={redirection} />} />
           <Route exact path="/setup" component={() => <Setup />} />
           <Route path="/dashboards/:nameOrId" component={() => <App />} />
+          <Alert stack={{ limit: 3 }} />
         </div>
       </Router>
     </MuiThemeProvider>

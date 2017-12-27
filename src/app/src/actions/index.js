@@ -1,6 +1,11 @@
 import 'whatwg-fetch'
 import { getServerAddress } from '../utilities'
 
+export const ADD_PANE = 'ADD_PANE'
+export const REMOVE_PANE = 'REMOVE_PANE'
+export const LOAD_AVAILABLE = 'LOAD_AVAILABLE'
+export const SET_CURRENT = 'SET_CURRENT'
+
 export const addPane = () => {
   return {
     type: 'ADD_PANE'
@@ -17,12 +22,13 @@ export const loadDashboardsAndSetCurrent = (nameOrId) => async (dispatch) => {
   const uri = `${getServerAddress()}/api/dashboards`
   const response = await fetch(uri)
   const available = await response.json()
-  dispatch({ type: 'LOAD_AVAILABLE', available })
 
   if (nameOrId) {
     const current = available.find(x => x._id === nameOrId || x.name === nameOrId)
-    if (current) dispatch(setCurrent(current))
+    dispatch(setCurrent(current))
   }
+
+  dispatch({ type: 'LOAD_AVAILABLE', available })
 }
 
 export const setCurrent = (current) => {

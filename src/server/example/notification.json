@@ -1,0 +1,10 @@
+{
+  "title": "Test",
+  "from": "Peej",
+  "type": "info",
+  "beep": "/beeps/r2d2.mp3",
+  "timeout": 5000,
+  "position": "top-right",
+  "offset": 100,
+  "text": "i love kake"
+}

@@ -14,12 +14,12 @@ class DashboardSocketManager {
 
   createDashboardNamespace(dashboardId) {
     if (!Object.keys(this._namespaces).includes(dashboardId)) {
-      const nsp = ioFactory(this._server).of(`/${dashboardId}`)
-      nsp.on('connection', () => {
+      const nsp = this._io.of(`/${dashboardId}`)
+      nsp.on('connection', (socket) => {
         this._logger.info(`Dashboard client connected to ${dashboardId}`)
-      })
-      nsp.on('disconnect', () => {
-        this._logger.info(`Dashboard client disconnected from ${dashboardId}`)
+        socket.on('disconnect', () => {
+          this._logger.info(`Dashboard client disconnected from ${dashboardId}`)
+        })
       })
       this._namespaces[dashboardId] = nsp
     }
@@ -30,7 +30,7 @@ class DashboardSocketManager {
     if(!nsp) throw new Error(`${dashboardId} Namespace not created!`)
     
     nsp.emit('notification', message)
-    this.logger.info(`Sent ${dashboardId} notification ${JSON.stringify(message)}`)
+    this._logger.info(`Sent ${dashboardId} notification ${JSON.stringify(message)}`)
   }
 }
 

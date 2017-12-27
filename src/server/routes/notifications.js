@@ -12,7 +12,7 @@ router.post('/:dashboardId', handleRejections(async (req, res) => {
   const dashboardId = req.params.dashboardId
   if (!dashboardId) return res.sendStatus(statusCode.BAD_REQUEST)
 
-  const message = req.body.message
+  const message = req.body
   if (!message) return res.sendStatus(statusCode.BAD_REQUEST)
 
   const dashboard = await Dashboard.findById(dashboardId)
