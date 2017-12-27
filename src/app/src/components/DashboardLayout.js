@@ -45,7 +45,7 @@ class DashboardLayout extends React.Component {
   }
 
   onToggleDrawer = () => {
-    this.setState({ drawerOpen: true })
+    this.setState({ setupOpen: false, drawerOpen: true })
   }
 
 
@@ -61,11 +61,11 @@ class DashboardLayout extends React.Component {
 
 
   handleAddDashboardOpened = () => {
-    this.setState({ drawerOpen: false, addNewDashboardOpen: true })
+    this.setState({ setupOpen: false, drawerOpen: false, addNewDashboardOpen: true })
   }
 
   handleAddDashboardClosed = () => {
-    this.setState({ drawerOpen: true, addNewDashboardOpen: false })
+    this.setState({ setupOpen: false, drawerOpen: true, addNewDashboardOpen: false })
   }
 
 
@@ -74,7 +74,7 @@ class DashboardLayout extends React.Component {
   }
 
   handleSetupClicked = () => {
-    this.setState({ setupOpen: true })
+    this.setState({ setupOpen: true, drawerOpen: false })
   }
 
   renderContext = () =>
