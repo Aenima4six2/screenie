@@ -71,3 +71,16 @@ export const updateDashboard = (dashboard) => async (dispatch) => {
     throw error
   }
 }
+
+export const removeDashboard = (dashboard) => async (dispatch) => {
+  const uri = `${getServerAddress()}/api/dashboards/${dashboard._id}`
+  const response = await fetch(uri, { method: 'DELETE' })
+
+  if (response.status >= 200 && response.status < 300) {
+    dispatch(loadAvailableDashboards())
+  } else {
+    var error = new Error(response.statusText)
+    error.response = response
+    throw error
+  }
+}

@@ -12,7 +12,8 @@ import '../../node_modules/font-awesome/css/font-awesome.css'
 
 class ModalDashboardSelector extends React.Component {
   static propTypes = {
-    onCurrentSelected: PropTypes.func.isRequired,
+    onDashboardOpened: PropTypes.func.isRequired,
+    onDashboardRemoved: PropTypes.func.isRequired,
     available: PropTypes.arrayOf(PropTypes.object).isRequired,
     match: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
@@ -22,7 +23,8 @@ class ModalDashboardSelector extends React.Component {
   state = {
     open: true,
     addNewDashboardOpen: false,
-    editDashboardOpen: false
+    editDashboardOpen: false,
+    removeDashboardDialogOpen: false
   }
 
   componentWillReceiveProps(newProps) {
@@ -32,8 +34,14 @@ class ModalDashboardSelector extends React.Component {
   handleOpenDashboard = () => {
     const dashboard = this.state.current
     this.props.history.push(`/dashboards/${dashboard.name}`)
-    this.props.onCurrentSelected(dashboard)
+    this.props.onDashboardOpened(dashboard)
     this.setState({ open: false })
+  }
+
+  handleRemoveDashboard = () => {
+    const dashboard = this.state.current
+    this.props.onDashboardRemoved(dashboard)
+    this.setState({ open: true, removeDashboardDialogOpen: false })
   }
 
   handleDashboardSelected = (e, value) => {
@@ -41,11 +49,11 @@ class ModalDashboardSelector extends React.Component {
   }
 
   handleAddDashboardOpened = () => {
-    this.setState({ open: false, addNewDashboardOpen: true })
+    this.setState({ addNewDashboardOpen: true })
   }
 
   handleAddDashboardClosed = () => {
-    this.setState({ open: true, addNewDashboardOpen: false })
+    this.setState({ addNewDashboardOpen: false })
   }
 
 
@@ -55,6 +63,14 @@ class ModalDashboardSelector extends React.Component {
 
   handleEditDashboardClosed = () => {
     this.setState({ editDashboardOpen: false })
+  }
+
+  handleRemoveDashboardDialogOpened = () => {
+    this.setState({ removeDashboardDialogOpen: true })
+  }
+
+  handleRemoveDashboardDialogClosed = () => {
+    this.setState({ removeDashboardDialogOpen: false })
   }
 
 
@@ -70,6 +86,13 @@ class ModalDashboardSelector extends React.Component {
               keyboardFocused={false}
               onClick={() => this.handleAddDashboardOpened()}
               style={{ float: 'left' }}
+            />,
+            <FlatButton
+              label="Delete"
+              primary={false}
+              keyboardFocused={false}
+              onClick={() => this.handleRemoveDashboardDialogOpened()}
+              disabled={!this.state.current}
             />,
             <FlatButton
               label="Edit"
@@ -89,7 +112,8 @@ class ModalDashboardSelector extends React.Component {
           open={this.state.open}
           modal={true}
           autoScrollBodyContent={true}>
-          <RadioButtonGroup name="dashboards" onChange={(e, value) => this.handleDashboardSelected(e, value)}>
+          <RadioButtonGroup name="dashboards"
+            onChange={(e, value) => this.handleDashboardSelected(e, value)}>
             {this.props.available.map(dashboard =>
               <RadioButton
                 key={dashboard._id}
@@ -116,7 +140,28 @@ class ModalDashboardSelector extends React.Component {
           onClosed={() => this.handleEditDashboardClosed()}
           dashboard={this.state.current}
         />
-      </div>
+
+        <Dialog
+          title="Really Delete?"
+          open={this.state.removeDashboardDialogOpen}
+          modal={true}
+          actions={[<FlatButton
+            label="Cancel"
+            primary={false}
+            keyboardFocused={false}
+            onClick={() => this.handleRemoveDashboardDialogClosed()}
+            disabled={!this.state.current}
+          />,
+          <FlatButton
+            label="Yup"
+            primary={true}
+            keyboardFocused={true}
+            onClick={() => this.handleRemoveDashboard()}
+            disabled={!this.state.current}
+          />]}
+        ></Dialog>
+
+      </div >
     )
   }
 }

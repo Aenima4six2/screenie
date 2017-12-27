@@ -21,14 +21,14 @@ class App extends Component {
     this.props.dispatch(actions.loadAvailableDashboards(nameOrId))
   }
 
-  setCurrent = (current) => {
+  handleOpenDashboard = (current) => {
     this.props.dispatch(actions.setCurrent(current))
   }
 
   render() {
     if (this.props.available.length) {
       return this.props.current
-        ? <DashboardLayout onCurrentSelected={this.setCurrent} {...this.props} />
+        ? <DashboardLayout onDashboardOpened={this.handleOpenDashboard} {...this.props} />
         : <Redirect to={{ pathname: '/setup', state: { from: this.props.location } }} />
     }
 
