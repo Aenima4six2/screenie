@@ -5,7 +5,6 @@ import * as actions from '../actions'
 import PropTypes from 'prop-types'
 import { withRouter, Redirect } from 'react-router'
 import Loading from './Loading'
-const fiveMin = 900000
 
 class App extends Component {
   static propTypes = {
@@ -21,14 +20,10 @@ class App extends Component {
     this.props.dispatch(actions.loadAvailableDashboards(nameOrId))
   }
 
-  handleOpenDashboard = (current) => {
-    this.props.dispatch(actions.setCurrent(current))
-  }
-
   render() {
     if (this.props.available.length) {
       return this.props.current
-        ? <DashboardLayout onDashboardOpened={this.handleOpenDashboard} {...this.props} />
+        ? <DashboardLayout />
         : <Redirect to={{ pathname: '/setup', state: { from: this.props.location } }} />
     }
 

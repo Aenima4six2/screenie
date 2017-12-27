@@ -10,16 +10,18 @@ import FontIcon from 'material-ui/FontIcon'
 import IconButton from 'material-ui/IconButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
-import { withRouter } from 'react-router-dom'
 import ModalDashboardForm from './ModalDashboardForm'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import IconMenu from 'material-ui/IconMenu'
+import { connect } from 'react-redux'
+import * as actions from '../actions'
+import ModalDashboardSelector from './ModalDashboardSelector'
+import { withRouter } from 'react-router'
 import './DashboardLayout.css'
 import '../../node_modules/font-awesome/css/font-awesome.css'
 
 class DashboardLayout extends React.Component {
   static propTypes = {
-    onDashboardOpened: PropTypes.func.isRequired,
     current: PropTypes.object,
     available: PropTypes.arrayOf(PropTypes.object).isRequired,
     match: PropTypes.object.isRequired,
@@ -30,12 +32,15 @@ class DashboardLayout extends React.Component {
   state = {
     drawerOpen: false,
     addNewDashboardOpen: false,
+    setupOpen: false,
     isFullScreen: this.props.current && this.props.current.isFullScreen
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.current) {
-      this.setState({ isFullScreen: nextProps.current && nextProps.current.isFullScreen })
+      this.setState({
+        isFullScreen: nextProps.current && nextProps.current.isFullScreen
+      })
     }
   }
 
@@ -43,10 +48,15 @@ class DashboardLayout extends React.Component {
     this.setState({ drawerOpen: true })
   }
 
-  handleOpenDashboard = (dashboard) => {
-    this.props.history.push(`/dashboards/${dashboard.name}`)
-    this.props.onDashboardOpened(dashboard)
-    this.setState({ drawerOpen: false })
+
+  handleOpenDashboard = (current) => {
+    this.props.history.push(`/dashboards/${current.name}`)
+    this.props.dispatch(actions.setCurrent(current))
+    this.setState({ drawerOpen: false, setupOpen: false })
+  }
+
+  handleRemoveDashboard = (current) => {
+    this.props.dispatch(actions.removeDashboard(current))
   }
 
 
@@ -58,12 +68,13 @@ class DashboardLayout extends React.Component {
     this.setState({ drawerOpen: true, addNewDashboardOpen: false })
   }
 
+
   goFull = () => {
     this.setState({ isFullScreen: true });
   }
 
   handleSetupClicked = () => {
-    this.props.history.push('/setup')
+    this.setState({ setupOpen: true })
   }
 
   renderContext = () =>
@@ -94,12 +105,15 @@ class DashboardLayout extends React.Component {
 
     return (
       <div>
+        {/* Main App Bar */}
         <AppBar
           style={appBarStyle}
           title={titleCase(this.props.current.name)}
           onLeftIconButtonClick={this.onToggleDrawer}
           iconElementRight={this.renderContext()}
         />
+
+        {/* Dashboard Drawer */}
         <Drawer
           docked={false}
           width={300}
@@ -126,6 +140,7 @@ class DashboardLayout extends React.Component {
           </div>
         </Drawer>
 
+        {/* Fullscreen Control */}
         <Fullscreen
           enabled={this.state.isFullScreen}
           onChange={isFullScreen => { this.setState({ isFullScreen }) }}>
@@ -134,14 +149,30 @@ class DashboardLayout extends React.Component {
           </div>
         </Fullscreen>
 
+        {/* Add */}
         <ModalDashboardForm
           title="Add New Dashboard"
           open={this.state.addNewDashboardOpen}
           onClosed={this.handleAddDashboardClosed}
         />
+
+        {/* Setup */}
+        <ModalDashboardSelector
+          open={this.state.setupOpen}
+          onDashboardOpened={this.handleOpenDashboard}
+          onDashboardRemoved={this.handleRemoveDashboard}
+          available={this.props.available}
+          showCancelButton={true}
+        />
+
       </div>
     )
   }
 }
 
-export default withRouter(DashboardLayout)
+const mapStateToProps = (state) => ({
+  available: state.dashboards.available,
+  current: state.dashboards.current,
+})
+
+export default withRouter(connect(mapStateToProps)(DashboardLayout))
