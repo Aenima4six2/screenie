@@ -19,7 +19,7 @@ import '../../node_modules/font-awesome/css/font-awesome.css'
 
 class DashboardLayout extends React.Component {
   static propTypes = {
-    onCurrentSelected: PropTypes.func.isRequired,
+    onDashboardOpened: PropTypes.func.isRequired,
     current: PropTypes.object,
     available: PropTypes.arrayOf(PropTypes.object).isRequired,
     match: PropTypes.object.isRequired,
@@ -43,9 +43,9 @@ class DashboardLayout extends React.Component {
     this.setState({ drawerOpen: true })
   }
 
-  handleSubmit = (dashboard) => {
+  handleOpenDashboard = (dashboard) => {
     this.props.history.push(`/dashboards/${dashboard.name}`)
-    this.props.onCurrentSelected(dashboard)
+    this.props.onDashboardOpened(dashboard)
     this.setState({ drawerOpen: false })
   }
 
@@ -114,7 +114,7 @@ class DashboardLayout extends React.Component {
                     className="fa fa-tachometer"
                     style={{ marginRight: 24 }}
                   />}
-                onClick={() => this.handleSubmit(dashboard)}>
+                onClick={() => this.handleOpenDashboard(dashboard)}>
                 {titleCase(dashboard.name)}
               </MenuItem>)}
             <FloatingActionButton

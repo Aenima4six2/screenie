@@ -15,14 +15,19 @@ class Setup extends Component {
     }
   }
 
-  setCurrent = (current) => {
+  handleOpenDashboard = (current) => {
     this.props.dispatch(actions.setCurrent(current))
+  }
+
+  handleRemoveDashboard = (current) => {
+    this.props.dispatch(actions.removeDashboard(current))
   }
 
   render() {
     return (
       <ModalDashboardSelector
-        onCurrentSelected={this.setCurrent}
+        onDashboardOpened={this.handleOpenDashboard}
+        onDashboardRemoved={this.handleRemoveDashboard}
         available={this.props.available}
       />
     )
