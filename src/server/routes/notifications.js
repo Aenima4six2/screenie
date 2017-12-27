@@ -20,7 +20,7 @@ router.post('/:dashboardId', handleRejections(async (req, res) => {
   res.sendStatus(statusCode.ACCEPTED)
 
   const dsm = req.dashboardSocketManager
-  dsm.sendDashboardNotification(dashboardId, message)
+  dsm.sendDashboardNotification(message, dashboardId)
 }))
 
 /**
@@ -37,7 +37,7 @@ router.post('/slack', handleRejections(async (req, res) => {
   const dsm = req.dashboardSocketManager
   const dashboards = await Dashboard.find({ webhookTokens: [token] })
   dashboards.forEach(dashboard => {
-    dsm.sendDashboardNotification(dashboard.id, message)
+    dsm.sendDashboardNotification(message, dashboard.id)
   })
 }))
 
