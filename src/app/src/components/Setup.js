@@ -26,6 +26,7 @@ class Setup extends Component {
   render() {
     return (
       <ModalDashboardSelector
+        open={true}
         onDashboardOpened={this.handleOpenDashboard}
         onDashboardRemoved={this.handleRemoveDashboard}
         available={this.props.available}

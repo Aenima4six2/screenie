@@ -17,18 +17,20 @@ class ModalDashboardSelector extends React.Component {
     available: PropTypes.arrayOf(PropTypes.object).isRequired,
     match: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    open: PropTypes.bool.isRequired,
+    showCancelButton: PropTypes.bool
   }
 
   state = {
-    open: true,
+    open: this.props.open,
     addNewDashboardOpen: false,
     editDashboardOpen: false,
     removeDashboardDialogOpen: false
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({ current: undefined })
+    this.setState({ current: undefined, open: newProps.open })
   }
 
   handleOpenDashboard = () => {
@@ -47,6 +49,7 @@ class ModalDashboardSelector extends React.Component {
   handleDashboardSelected = (e, value) => {
     this.setState({ current: value })
   }
+
 
   handleAddDashboardOpened = () => {
     this.setState({ addNewDashboardOpen: true })
@@ -74,18 +77,29 @@ class ModalDashboardSelector extends React.Component {
   }
 
 
+  handleCancelClicked = () => {
+    this.setState({ open: false })
+  }
+
+
   render() {
     return (
       <div>
         <Dialog
           title="Dashboards"
           actions={[
+            this.props.showCancelButton &&
+            <FlatButton
+              label="Cancel"
+              primary={false}
+              keyboardFocused={false}
+              onClick={() => this.handleCancelClicked()}
+            />,
             <FlatButton
               label="Add"
               primary={false}
               keyboardFocused={false}
               onClick={() => this.handleAddDashboardOpened()}
-              style={{ float: 'left' }}
             />,
             <FlatButton
               label="Delete"
@@ -161,7 +175,7 @@ class ModalDashboardSelector extends React.Component {
             disabled={!this.state.current}
           />]}
         >
-        Are you really sure you want to delete the selected dashboard?
+          Are you really sure you want to delete the selected dashboard?
         </Dialog>
 
       </div >
