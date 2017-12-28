@@ -10,13 +10,5 @@ Screenie is a simple web page rotation app for you TV screen! Use screenie to cr
 1. Full screen support.
 1. Simple CRUD API.
 
-## Built With
-1. Node.js
-1. React & Redux
-1. MongoDB
-1. Socket.IO
-1. Material UI
-1. Docker
-
 ## Preview
 ![preview](./screenie.gif "Screenshot")
