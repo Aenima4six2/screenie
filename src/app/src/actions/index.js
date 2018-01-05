@@ -72,6 +72,16 @@ export const updateDashboard = (dashboard) => async (dispatch) => {
   }
 }
 
+export const cloneDashboard = (dashboard) => async (dispatch) => {
+  const cloned = {
+    ...dashboard,
+    _id: undefined,
+    name: `${dashboard.name} - Cloned`
+  }
+
+  dispatch(addDashboard(cloned))
+}
+
 export const removeDashboard = (dashboard) => async (dispatch) => {
   const uri = `${getServerAddress()}/api/dashboards/${dashboard._id}`
   const response = await fetch(uri, { method: 'DELETE' })

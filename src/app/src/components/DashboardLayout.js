@@ -50,7 +50,7 @@ class DashboardLayout extends React.Component {
 
 
   handleOpenDashboard = (current) => {
-    this.props.history.push(`/dashboards/${current.name}`)
+    this.props.history.push(`/dashboards/${encodeURIComponent(current.name)}`)
     this.props.dispatch(actions.setCurrent(current))
     this.setState({ drawerOpen: false, setupOpen: false })
   }
@@ -159,9 +159,6 @@ class DashboardLayout extends React.Component {
         {/* Setup */}
         <ModalDashboardSelector
           open={this.state.setupOpen}
-          onDashboardOpened={this.handleOpenDashboard}
-          onDashboardRemoved={this.handleRemoveDashboard}
-          available={this.props.available}
           showCancelButton={true}
         />
 

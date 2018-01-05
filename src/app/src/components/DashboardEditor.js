@@ -57,6 +57,8 @@ class DashboardEditor extends React.Component {
     let nameError = ''
     if (!name) nameError = 'Dashboard Name is required!'
     else if (name && name.length > 200) nameError = 'Dashboard Name must be 200 characters or less'
+    else if (name && name.includes('/')) nameError = 'Dashboard Name cannot contain /'
+    else if (name && name.includes('\\')) nameError = 'Dashboard Name cannot contain \\'
     this.setState({ name, nameError }, this.handleDashboardChanged)
   }
 
