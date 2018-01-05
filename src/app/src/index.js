@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import theme from './theme'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import Setup from './components/Setup'
+import ModalDashboardSelector from './components/ModalDashboardSelector'
 import 'typeface-roboto'
 import 'react-s-alert/dist/s-alert-default.css'
 import 'react-s-alert/dist/s-alert-css-effects/bouncyflip.css'
@@ -23,9 +23,15 @@ render(
     <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
       <Router>
         <div id="app-root">
-          <Route exact path="/" component={() => <Redirect to={redirection} />} />
-          <Route exact path="/setup" component={() => <Setup />} />
-          <Route path="/dashboards/:nameOrId" component={() => <App />} />
+          <Route exact path="/" component={() =>
+            <Redirect to={redirection} />}
+          />
+          <Route exact path="/setup" component={() =>
+            <ModalDashboardSelector open={true} />}
+          />
+          <Route path="/dashboards/:nameOrId" component={() =>
+            <App />}
+          />
           <Alert stack={{ limit: 3 }} />
         </div>
       </Router>
