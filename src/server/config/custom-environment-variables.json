@@ -1,5 +1,9 @@
 {
     "mongodb": {
         "connectionUri": "MONGODB_CONNECTION-URI"
+    },
+    "socketio": {
+        "usePolling": "SOCKETIO_USE-POLLING",
+        "useWebSockets": "SOCKETIO_USE-WEB-SOCKETS"
     }
 }
