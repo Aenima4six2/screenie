@@ -1,10 +1,12 @@
 const ioFactory = require('socket.io')
+const config = require('config')
+const conversions = require('../utilities/conversions')
 
 class DashboardSocketManager {
   constructor({ server, logger, dashboardIds }) {
     this._server = server
     this._logger = logger
-    this._io = ioFactory(server)
+    this._io = ioFactory(server, createSocketOptions())
     this._namespaces = {}
 
     if (dashboardIds && dashboardIds.length) {
@@ -52,7 +54,20 @@ class DashboardSocketManager {
       this._logger.info(`Sent ${namespace} reload command`)
     })
   }
+}
 
+function createSocketOptions() {
+  const socketConfig = config.get('socketio')
+  if (!socketConfig) return
+
+  const socketOptions = { transports: [] }
+  const usePolling = conversions.getBoolean(socketConfig.usePolling)
+  const useWebSockets = conversions.getBoolean(socketConfig.useWebSockets)
+  
+  if (usePolling) socketOptions.transports.push('polling')
+  if (useWebSockets) socketOptions.transports.push('websocket')
+
+  return socketOptions
 }
 
 module.exports = DashboardSocketManager
